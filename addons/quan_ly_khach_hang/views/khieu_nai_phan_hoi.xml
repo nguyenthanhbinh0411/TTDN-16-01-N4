@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Kanban View -->
+        <record id="view_khieu_nai_phan_hoi_kanban" model="ir.ui.view">
+            <field name="name">khieu_nai_phan_hoi.kanban</field>
+            <field name="model">khieu_nai_phan_hoi</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="trang_thai" class="o_kanban_small_column">
+                    <field name="tieu_de"/>
+                    <field name="khach_hang_id"/>
+                    <field name="do_uu_tien"/>
+                    <field name="loai"/>
+                    <field name="ngay_tao"/>
+                    <field name="nguoi_xu_ly_id"/>
+                    <field name="han_xu_ly"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click" t-attf-style="border-left: 4px solid {{record.do_uu_tien.raw_value == 'khan_cap' ? '#DC3545' : (record.do_uu_tien.raw_value == 'cao' ? '#FFC107' : '#17A2B8')}}; box-shadow: 0 2px 8px {{record.do_uu_tien.raw_value == 'khan_cap' ? 'rgba(220, 53, 69, 0.25)' : 'rgba(114, 103, 165, 0.12)'}};">
+                                <div class="o_kanban_record_top mb-2">
+                                    <div style="flex: 1;">
+                                        <strong style="color: #7267A5; font-size: 16px; font-weight: 600;">
+                                            <i t-if="record.do_uu_tien.raw_value == 'khan_cap'" class="fa fa-exclamation-triangle" title="Khẩn cấp" style="color: #DC3545; animation: pulse 2s infinite;"/>
+                                            <field name="tieu_de"/>
+                                        </strong>
+                                    </div>
+                                    <div>
+                                        <span t-if="record.do_uu_tien.raw_value == 'khan_cap'" class="badge" style="padding: 6px 12px; background: linear-gradient(135deg, #DC3545, #c82333); color: white; font-weight: 700; animation: pulse 2s infinite;">
+                                            <i class="fa fa-fire" title="Khẩn cấp"/> KHẨN CẤP
+                                        </span>
+                                        <span t-elif="record.do_uu_tien.raw_value == 'cao'" class="badge" style="padding: 6px 12px; background: linear-gradient(135deg, #FFC107, #FF9800); color: white; font-weight: 600;">
+                                            <i class="fa fa-arrow-up" title="Ưu tiên cao"/> CAO
+                                        </span>
+                                        <span t-elif="record.do_uu_tien.raw_value == 'trung_binh'" class="badge badge-info" style="padding: 6px 12px; font-weight: 600;">
+                                            <i class="fa fa-minus" title="Trung bình"/> TRUNG BÌNH
+                                        </span>
+                                        <span t-else="" class="badge badge-secondary" style="padding: 6px 12px;">
+                                            <i class="fa fa-arrow-down" title="Ưu tiên thấp"/> THẤP
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div style="padding: 10px; background: linear-gradient(135deg, #F4F3F9, #FFFFFF); border-radius: 8px; margin-bottom: 10px; border: 1px solid #E5E3ED;">
+                                        <div style="font-size: 10px; color: #7267A5; text-transform: uppercase; font-weight: 600; margin-bottom: 4px; letter-spacing: 0.5px;">KHÁCH HÀNG</div>
+                                        <div style="font-weight: 600; color: #212529;">
+                                            <field name="khach_hang_id"/>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; gap: 8px; margin: 10px 0;">
+                                        <div style="flex: 1; padding: 8px; background: #F8F9FA; border-radius: 6px; text-align: center; border: 1px solid #E5E3ED;">
+                                            <div style="font-size: 10px; color: #6C757D; margin-bottom: 2px;">LOẠI</div>
+                                            <span class="badge badge-secondary" style="font-size: 10px; padding: 4px 8px;">
+                                                <field name="loai"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <!-- SLA Indicator -->
+                                    <div t-if="record.han_xu_ly.raw_value" style="padding: 8px; border-radius: 6px; margin-top: 10px; display: flex; align-items: center; gap: 8px;" t-attf-style="background: {{record.do_uu_tien.raw_value == 'khan_cap' ? 'rgba(220, 53, 69, 0.1)' : 'rgba(114, 103, 165, 0.08)'}}; border: 1px solid {{record.do_uu_tien.raw_value == 'khan_cap' ? 'rgba(220, 53, 69, 0.3)' : 'rgba(114, 103, 165, 0.2)'}}">
+                                        <i class="fa fa-hourglass-half" title="Hạn xử lý" t-attf-style="color: {{record.do_uu_tien.raw_value == 'khan_cap' ? '#DC3545' : '#7267A5'}}; font-size: 14px;"/>
+                                        <div style="flex: 1;">
+                                            <div style="font-size: 9px; text-transform: uppercase; font-weight: 600; margin-bottom: 2px;" t-attf-style="color: {{record.do_uu_tien.raw_value == 'khan_cap' ? '#DC3545' : '#7267A5'}};">HẠN XỬ LÝ</div>
+                                            <div style="font-size: 11px; font-weight: 600; color: #212529;">
+                                                <field name="han_xu_ly" widget="date"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom mt-3" style="padding-top: 12px; border-top: 1px solid #DEE2E6;">
+                                    <div class="oe_kanban_bottom_left" style="font-size: 12px; color: #6C757D;">
+                                        <field name="ngay_tao" widget="date"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="nguoi_xu_ly_id" widget="many2one_avatar"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_khieu_nai_phan_hoi_form" model="ir.ui.view">
+            <field name="name">khieu_nai_phan_hoi.form</field>
+            <field name="model">khieu_nai_phan_hoi</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_bat_dau_xu_ly" string="Bắt đầu xử lý" type="object" class="btn-primary" attrs="{'invisible': [('trang_thai', '!=', 'moi')]}"/>
+                        <button name="action_giai_quyet" string="Đã giải quyết" type="object" class="btn-success" attrs="{'invisible': [('trang_thai', 'not in', ['dang_xu_ly', 'cho_phan_hoi'])]}"/>
+                        <button name="action_dong" string="Đóng" type="object" attrs="{'invisible': [('trang_thai', '!=', 'da_giai_quyet')]}"/>
+                        <field name="trang_thai" widget="statusbar" statusbar_visible="moi,dang_xu_ly,da_giai_quyet,dong"/>
+                    </header>
+                    <sheet>
+                        <div class="ribbon" t-if="record.do_uu_tien.raw_value == 'khan_cap'">
+                            <span style="background-color: #DC3545;">Khẩn cấp</span>
+                        </div>
+                        <div class="oe_title" style="background: linear-gradient(135deg, #DC3545 0%, #c82333 100%); color: white; padding: 24px; border-radius: 12px; margin-bottom: 24px;" t-if="record.do_uu_tien.raw_value == 'khan_cap'">
+                            <div style="font-size: 14px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Ticket khiếu nại</div>
+                            <h1 style="margin: 0; font-family: 'Courier New', monospace; font-size: 36px;">
+                                <field name="ma_khieu_nai" readonly="1"/>
+                            </h1>
+                            <h2 style="margin-top: 12px; font-weight: 500; font-size: 20px; opacity: 0.95;">
+                                <field name="tieu_de" placeholder="Tiêu đề khiếu nại..." style="color: white; border: none;"/>
+                            </h2>
+                        </div>
+                        <div class="oe_title" style="padding: 24px; border: 2px solid #DEE2E6; border-radius: 12px; margin-bottom: 24px;" t-if="record.do_uu_tien.raw_value != 'khan_cap'">
+                            <div style="font-size: 14px; color: #6C757D; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Ticket khiếu nại</div>
+                            <h1 style="margin: 0; font-family: 'Courier New', monospace; font-size: 32px; color: #0066CC;">
+                                <field name="ma_khieu_nai" readonly="1"/>
+                            </h1>
+                            <h2 style="margin-top: 12px; font-weight: 500; font-size: 18px;">
+                                <field name="tieu_de" placeholder="Tiêu đề khiếu nại..." style="border: none;"/>
+                            </h2>
+                        </div>
+                        <group>
+                            <group string="Thông tin ticket" style="border: 1px solid #DEE2E6; border-radius: 8px; padding: 16px; background: #F8F9FA;">
+                                <field name="khach_hang_id" style="font-weight: 600;"/>
+                                <field name="loai" widget="badge"/>
+                                <field name="do_uu_tien" widget="badge"/>
+                            </group>
+                            <group string="Xử lý &amp; Phân công" style="border: 1px solid #DEE2E6; border-radius: 8px; padding: 16px; background: #F8F9FA;">
+                                <field name="ngay_tao"/>
+                                <field name="han_xu_ly" style="font-weight: 600;"/>
+                                <field name="nguoi_xu_ly_id" widget="many2one_avatar"/>
+                            </group>
+                        </group>
+                        <group attrs="{'invisible': [('trang_thai', 'not in', ['da_giai_quyet', 'dong'])]}">
+                            <group>
+                                <field name="ngay_giai_quyet"/>
+                                <field name="thoi_gian_xu_ly" widget="float_time"/>
+                            </group>
+                            <group>
+                                <field name="danh_gia_khach_hang"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Nội dung">
+                                <field name="noi_dung" placeholder="Mô tả chi tiết khiếu nại..."/>
+                            </page>
+                            <page string="Phương án giải quyết">
+                                <field name="phuong_an_giai_quyet" placeholder="Phương án xử lý..."/>
+                            </page>
+                            <page string="Kết quả">
+                                <field name="ket_qua" placeholder="Kết quả xử lý..."/>
+                            </page>
+                            <page string="File đính kèm">
+                                <group>
+                                    <field name="file_dinh_kem" filename="file_dinh_kem_name"/>
+                                    <field name="file_dinh_kem_name" invisible="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="view_khieu_nai_phan_hoi_tree" model="ir.ui.view">
+            <field name="name">khieu_nai_phan_hoi.tree</field>
+            <field name="model">khieu_nai_phan_hoi</field>
+            <field name="arch" type="xml">
+                <tree decoration-danger="do_uu_tien == 'khan_cap'" decoration-warning="do_uu_tien == 'cao'" decoration-info="trang_thai == 'dang_xu_ly'" decoration-success="trang_thai == 'da_giai_quyet'">
+                    <field name="ma_khieu_nai" decoration-bf="1"/>
+                    <field name="do_uu_tien" widget="badge" decoration-danger="do_uu_tien == 'khan_cap'" decoration-warning="do_uu_tien == 'cao'"/>
+                    <field name="tieu_de"/>
+                    <field name="khach_hang_id"/>
+                    <field name="loai" widget="badge"/>
+                    <field name="ngay_tao"/>
+                    <field name="nguoi_xu_ly_id" widget="many2one_avatar"/>
+                    <field name="trang_thai" widget="badge" decoration-success="trang_thai == 'da_giai_quyet'" decoration-info="trang_thai == 'dang_xu_ly'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_khieu_nai_phan_hoi_search" model="ir.ui.view">
+            <field name="name">khieu_nai_phan_hoi.search</field>
+            <field name="model">khieu_nai_phan_hoi</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="tieu_de" string="Tiêu đề" filter_domain="['|', ('tieu_de', 'ilike', self), ('ma_khieu_nai', 'ilike', self)]"/>
+                    <field name="khach_hang_id"/>
+                    <field name="nguoi_xu_ly_id"/>
+                    <separator/>
+                    <filter string="Ticket của tôi" name="my_tickets" domain="[('nguoi_xu_ly_id', '=', uid)]"/>
+                    <filter string="Mới" name="moi" domain="[('trang_thai', '=', 'moi')]"/>
+                    <filter string="Đang xử lý" name="dang_xu_ly" domain="[('trang_thai', '=', 'dang_xu_ly')]"/>
+                    <filter string="Chờ phản hồi" name="cho_phan_hoi" domain="[('trang_thai', '=', 'cho_phan_hoi')]"/>
+                    <filter string="Đã giải quyết" name="da_giai_quyet" domain="[('trang_thai', '=', 'da_giai_quyet')]"/>
+                    <separator/>
+                    <filter string="KHẨN CẤP" name="khan_cap" domain="[('do_uu_tien', '=', 'khan_cap')]"/>
+                    <filter string="Ưu tiên cao" name="uu_tien_cao" domain="[('do_uu_tien', '=', 'cao')]"/>
+                    <filter string="Trung bình" name="trung_binh" domain="[('do_uu_tien', '=', 'trung_binh')]"/>
+                    <separator/>
+                    <filter string="Quá hạn xử lý" name="overdue" domain="[('han_xu_ly', '&lt;', context_today().strftime('%Y-%m-%d')), ('trang_thai', 'not in', ['da_giai_quyet', 'dong'])]"/>
+                    <filter string="Hạn hôm nay" name="due_today" domain="[('han_xu_ly', '=', context_today().strftime('%Y-%m-%d')), ('trang_thai', 'not in', ['da_giai_quyet', 'dong'])]"/>
+                    <filter string="Hạn tuần này" name="due_this_week" domain="[('han_xu_ly', '>=', (context_today() - relativedelta(days=context_today().weekday())).strftime('%Y-%m-%d')), ('han_xu_ly', '&lt;=', (context_today() + relativedelta(days=6-context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                    <filter string="Chưa phân công" name="unassigned" domain="[('nguoi_xu_ly_id', '=', False)]"/>
+                    <filter string="Khiếu nại" name="khieu_nai" domain="[('loai', '=', 'khieu_nai')]"/>
+                    <filter string="Phản hồi" name="phan_hoi" domain="[('loai', '=', 'phan_hoi')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Khách hàng" name="group_khach_hang" context="{'group_by': 'khach_hang_id'}"/>
+                        <filter string="Loại" name="group_loai" context="{'group_by': 'loai'}"/>
+                        <filter string="Trạng thái" name="group_trang_thai" context="{'group_by': 'trang_thai'}"/>
+                        <filter string="Độ ưu tiên" name="group_uu_tien" context="{'group_by': 'do_uu_tien'}"/>
+                        <filter string="Người xử lý" name="group_nguoi_xu_ly" context="{'group_by': 'nguoi_xu_ly_id'}"/>
+                        <filter string="Ngày tạo" name="group_ngay_tao" context="{'group_by': 'ngay_tao'}"/>
+                        <filter string="Tháng tạo" name="group_month" context="{'group_by': 'ngay_tao:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_khieu_nai_phan_hoi" model="ir.actions.act_window">
+            <field name="name">Khiếu nại &amp; Phản hồi</field>
+            <field name="res_model">khieu_nai_phan_hoi</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_khieu_nai_phan_hoi_search"/>
+        </record>
+    </data>
+</odoo>

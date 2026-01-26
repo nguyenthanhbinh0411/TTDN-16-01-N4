@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_mau_van_ban_tree" model="ir.ui.view">
+            <field name="name">mau.van.ban.tree</field>
+            <field name="model">mau.van.ban</field>
+            <field name="arch" type="xml">
+                <tree decoration-muted="active == False">
+                    <field name="sequence" widget="handle"/>
+                    <field name="ma_mau"/>
+                    <field name="name"/>
+                    <field name="loai_van_ban"/>
+                    <field name="so_lan_su_dung"/>
+                    <field name="lan_su_dung_gan_nhat"/>
+                    <field name="active" widget="boolean"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_mau_van_ban_form" model="ir.ui.view">
+            <field name="name">mau.van.ban.form</field>
+            <field name="model">mau.van.ban</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_preview" string="Xem trước" type="object" class="btn-primary"/>
+                        <button name="action_duplicate" string="Nhân bản" type="object" class="btn-secondary"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_preview" type="object" class="oe_stat_button" icon="fa-eye">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Xem trước</span>
+                                </div>
+                            </button>
+                            <button class="oe_stat_button" icon="fa-bar-chart">
+                                <field name="so_lan_su_dung" widget="statinfo" string="Lần sử dụng"/>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Lưu trữ" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Tên mẫu văn bản..."/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="ma_mau"/>
+                                <field name="loai_van_ban"/>
+                                <field name="sequence"/>
+                                <field name="active" widget="boolean"/>
+                            </group>
+                            <group>
+                                <field name="lan_su_dung_gan_nhat" readonly="1"/>
+                                <field name="file_mau" filename="file_mau_name"/>
+                                <field name="file_mau_name" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Nội dung HTML">
+                                <field name="noi_dung_html" widget="html"/>
+                            </page>
+                            <page string="Biến mẫu">
+                                <group>
+                                    <field name="bien_mau" widget="ace" options="{'mode': 'json'}"/>
+                                    <field name="gia_tri_mac_dinh" widget="ace" options="{'mode': 'json'}"/>
+                                </group>
+                            </page>
+                            <page string="Hướng dẫn">
+                                <field name="huong_dan" widget="html"/>
+                            </page>
+                            <page string="Mô tả">
+                                <field name="mo_ta" placeholder="Mô tả chi tiết về mẫu..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="view_mau_van_ban_kanban" model="ir.ui.view">
+            <field name="name">mau.van.ban.kanban</field>
+            <field name="model">mau.van.ban</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="ma_mau"/>
+                    <field name="loai_van_ban"/>
+                    <field name="so_lan_su_dung"/>
+                    <field name="active"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_record_top mb-2">
+                                    <div>
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div>
+                                        <field name="loai_van_ban" widget="badge"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div>
+                                        <i class="fa fa-code" title="Mã mẫu"/> <field name="ma_mau"/>
+                                    </div>
+                                    <div>
+                                        <i class="fa fa-bar-chart" title="Số lần sử dụng"/> Đã dùng: <field name="so_lan_su_dung"/> lần
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_right">
+                                        <button name="action_preview" type="object" class="btn btn-sm btn-primary">
+                                            <i class="fa fa-eye"/> Xem
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_mau_van_ban_search" model="ir.ui.view">
+            <field name="name">mau.van.ban.search</field>
+            <field name="model">mau.van.ban</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="ma_mau"/>
+                    <field name="loai_van_ban"/>
+                    <filter string="Đang hoạt động" name="active" domain="[('active', '=', True)]"/>
+                    <filter string="Đã lưu trữ" name="archived" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="Phổ biến" name="popular" domain="[('so_lan_su_dung', '&gt;', 5)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Loại văn bản" name="group_type" context="{'group_by': 'loai_van_ban'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_mau_van_ban" model="ir.actions.act_window">
+            <field name="name">Mẫu văn bản</field>
+            <field name="res_model">mau.van.ban</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_mau_van_ban_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo mẫu văn bản mới
+                </p>
+                <p>
+                    Tạo mẫu cho hợp đồng, báo giá, biên bản và các loại văn bản khác để tái sử dụng.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template.quan_ly_van_ban_dashboard" xml:space="preserve">
+    <t t-name="quan_ly_van_ban.Dashboard" owl="1">
+        <div class="o_van_ban_dashboard p-4">
+            <t t-if="state.loading">
+                <div class="text-center py-5">
+                    <i class="fa fa-spinner fa-spin fa-3x"/>
+                    <p class="mt-3">Đang tải dữ liệu...</p>
+                </div>
+            </t>
+            <t t-else="">
+                <h1 class="mb-4">
+                    <i class="fa fa-dashboard"/> Dashboard Quản lý Văn bản
+                </h1>
+                
+                <!-- KPI Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card border-primary">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-primary">
+                                    <i class="fa fa-inbox"/> Văn bản đến
+                                </h5>
+                                <h1 class="display-4 text-primary">
+                                    <t t-esc="state.data.van_ban_den_thang || 0"/>
+                                </h1>
+                                <p class="text-muted">Tháng này</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-success">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-success">
+                                    <i class="fa fa-paper-plane"/> Văn bản đi
+                                </h5>
+                                <h1 class="display-4 text-success">
+                                    <t t-esc="state.data.van_ban_di_thang || 0"/>
+                                </h1>
+                                <p class="text-muted">Tháng này</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-danger">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-danger">
+                                    <i class="fa fa-exclamation-triangle"/> Quá hạn
+                                </h5>
+                                <h1 class="display-4 text-danger">
+                                    <t t-esc="state.data.van_ban_qua_han || 0"/>
+                                </h1>
+                                <p class="text-muted">Cần xử lý ngay</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-warning">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-warning">
+                                    <i class="fa fa-clock-o"/> Chờ duyệt
+                                </h5>
+                                <h1 class="display-4 text-warning">
+                                    <t t-esc="(state.data.hop_dong_cho_duyet || 0) + (state.data.bao_gia_cho_duyet || 0)"/>
+                                </h1>
+                                <p class="text-muted">Hợp đồng &amp; Báo giá</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5>Tỷ lệ quá hạn</h5>
+                                <h1 class="text-danger">
+                                    <t t-esc="(state.data.ty_le_qua_han || 0).toFixed(1)"/>%
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5>Thời gian xử lý TB</h5>
+                                <h1 class="text-info">
+                                    <t t-esc="state.data.thoi_gian_xu_ly_tb || 0"/> ngày
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h5 class="text-center mb-3">Hành động nhanh</h5>
+                                <button class="btn btn-primary btn-block mb-2">
+                                    <i class="fa fa-plus"/> Tạo văn bản đến
+                                </button>
+                                <button class="btn btn-success btn-block mb-2">
+                                    <i class="fa fa-plus"/> Tạo văn bản đi
+                                </button>
+                                <button class="btn btn-info btn-block">
+                                    <i class="fa fa-plus"/> Tạo hợp đồng
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <i class="fa fa-list"/> Hoạt động gần đây
+                                </h4>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted text-center py-3">
+                                    Xem chi tiết trong các mục Văn bản đến, Văn bản đi, Hợp đồng
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

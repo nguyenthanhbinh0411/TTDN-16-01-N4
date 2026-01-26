@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_lich_su_phien_ban_tree" model="ir.ui.view">
+            <field name="name">lich.su.phien.ban.tree</field>
+            <field name="model">lich.su.phien.ban</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="phien_ban == 1" decoration-primary="phien_ban &gt; 1">
+                    <field name="phien_ban"/>
+                    <field name="name"/>
+                    <field name="van_ban_type"/>
+                    <field name="nguoi_sua"/>
+                    <field name="ngay_sua"/>
+                    <field name="thay_doi_chinh"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_lich_su_phien_ban_form" model="ir.ui.view">
+            <field name="name">lich.su.phien.ban.form</field>
+            <field name="model">lich.su.phien.ban</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_restore_version" string="Khôi phục phiên bản này" type="object" class="btn-warning"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="phien_ban" readonly="1"/>
+                                <field name="van_ban_type" readonly="1"/>
+                                <field name="van_ban_id" readonly="1"/>
+                                <field name="nguoi_sua" readonly="1"/>
+                                <field name="ngay_sua" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="file_dinh_kem" filename="file_name" readonly="1"/>
+                                <field name="file_name" invisible="1"/>
+                                <field name="ip_address" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Nội dung">
+                                <field name="noi_dung" readonly="1"/>
+                            </page>
+                            <page string="So sánh thay đổi">
+                                <field name="diff_text" readonly="1" widget="html"/>
+                            </page>
+                            <page string="Ghi chú">
+                                <field name="ghi_chu_thay_doi" readonly="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_lich_su_phien_ban_search" model="ir.ui.view">
+            <field name="name">lich.su.phien.ban.search</field>
+            <field name="model">lich.su.phien.ban</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="van_ban_type"/>
+                    <field name="nguoi_sua"/>
+                    <filter string="Hôm nay" name="today" domain="[('ngay_sua', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tuần này" name="this_week" domain="[('ngay_sua', '&gt;=', (context_today() - relativedelta(days=context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Loại văn bản" name="group_type" context="{'group_by': 'van_ban_type'}"/>
+                        <filter string="Người sửa" name="group_user" context="{'group_by': 'nguoi_sua'}"/>
+                        <filter string="Ngày" name="group_date" context="{'group_by': 'ngay_sua:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_lich_su_phien_ban" model="ir.actions.act_window">
+            <field name="name">Lịch sử phiên bản</field>
+            <field name="res_model">lich.su.phien.ban</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_lich_su_phien_ban_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Lịch sử phiên bản văn bản
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_cong_no_khach_hang_tree" model="ir.ui.view">
+            <field name="name">cong_no_khach_hang.tree</field>
+            <field name="model">cong_no_khach_hang</field>
+            <field name="arch" type="xml">
+                <tree decoration-danger="no_qua_han > 0" decoration-warning="tong_no > 0">
+                    <field name="khach_hang_id"/>
+                    <field name="tong_no" sum="Tổng nợ"/>
+                    <field name="no_qua_han" sum="Nợ quá hạn"/>
+                    <field name="no_chua_den_han" sum="Nợ chưa đến hạn"/>
+                    <field name="ngay_den_han_gan_nhat"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_cong_no_khach_hang_form" model="ir.ui.view">
+            <field name="name">cong_no_khach_hang.form</field>
+            <field name="model">cong_no_khach_hang</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="khach_hang_id"/>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="tong_no" widget="monetary"/>
+                                <field name="no_qua_han" widget="monetary"/>
+                                <field name="no_chua_den_han" widget="monetary"/>
+                            </group>
+                            <group>
+                                <field name="ngay_den_han_gan_nhat"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Hóa đơn chưa thanh toán">
+                                <field name="hoa_don_chua_thanh_toan_ids">
+                                    <tree>
+                                        <field name="so_hoa_don"/>
+                                        <field name="ngay_xuat"/>
+                                        <field name="han_thanh_toan"/>
+                                        <field name="tong_thanh_toan"/>
+                                        <field name="tong_da_thanh_toan"/>
+                                        <field name="con_no" sum="Tổng nợ"/>
+                                        <field name="trang_thai" widget="badge"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Pivot View -->
+        <record id="view_cong_no_khach_hang_pivot" model="ir.ui.view">
+            <field name="name">cong_no_khach_hang.pivot</field>
+            <field name="model">cong_no_khach_hang</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="khach_hang_id" type="row"/>
+                    <field name="tong_no" type="measure"/>
+                    <field name="no_qua_han" type="measure"/>
+                    <field name="no_chua_den_han" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_cong_no_khach_hang_search" model="ir.ui.view">
+            <field name="name">cong_no_khach_hang.search</field>
+            <field name="model">cong_no_khach_hang</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="khach_hang_id"/>
+                    <filter string="Có nợ" name="co_no" domain="[('tong_no', '>', 0)]"/>
+                    <filter string="Nợ quá hạn" name="no_qua_han" domain="[('no_qua_han', '>', 0)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_cong_no_khach_hang" model="ir.actions.act_window">
+            <field name="name">Công nợ khách hàng</field>
+            <field name="res_model">cong_no_khach_hang</field>
+            <field name="view_mode">tree,pivot,form</field>
+            <field name="search_view_id" ref="view_cong_no_khach_hang_search"/>
+        </record>
+    </data>
+</odoo>

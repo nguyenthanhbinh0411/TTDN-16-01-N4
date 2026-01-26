@@ -18,6 +18,21 @@
                             <button name="action_view_tai_lieu" type="object" class="oe_stat_button" icon="fa-folder-open">
                                 <field name="tai_lieu_count" widget="statinfo" string="Tài liệu"/>
                             </button>
+                            <button name="action_view_co_hoi" type="object" class="oe_stat_button" icon="fa-star">
+                                <field name="co_hoi_count" widget="statinfo" string="Cơ hội"/>
+                            </button>
+                            <button name="action_view_don_hang" type="object" class="oe_stat_button" icon="fa-shopping-cart">
+                                <field name="don_hang_count" widget="statinfo" string="Đơn hàng"/>
+                            </button>
+                            <button name="action_view_hoa_don" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                                <field name="hoa_don_count" widget="statinfo" string="Hóa đơn"/>
+                            </button>
+                            <button name="action_view_cong_no" type="object" class="oe_stat_button" icon="fa-exclamation-triangle" attrs="{'invisible': [('tong_no', '=', 0)]}">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value"><field name="tong_no" widget="monetary"/></span>
+                                    <span class="o_stat_text">Công nợ</span>
+                                </div>
+                            </button>
                         </div>
                         <style>
                             /* Force binary image widget to cover container and avoid framework overrides */
@@ -55,6 +70,33 @@
                             </group>
                         </group>
                         <notebook>
+                            <page string="Phân tích" name="phan_tich">
+                                <group>
+                                    <group string="Phân khúc khách hàng">
+                                        <field name="phan_tang" widget="badge"/>
+                                        <field name="doanh_thu_12_thang" widget="monetary"/>
+                                        <field name="gia_tri_tron_doi" widget="monetary"/>
+                                        <field name="trang_thai_vong_doi"/>
+                                    </group>
+                                    <group string="Tín nhiệm">
+                                        <field name="diem_tin_nhiem" widget="progressbar"/>
+                                        <field name="ty_le_thanh_toan_dung_han" widget="percentage"/>
+                                        <field name="so_lan_tre_han"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="RFM Analysis">
+                                        <field name="recency"/>
+                                        <field name="frequency"/>
+                                        <field name="monetary" widget="monetary"/>
+                                    </group>
+                                    <group string="Giao dịch">
+                                        <field name="don_hang_count"/>
+                                        <field name="gia_tri_trung_binh_don_hang" widget="monetary"/>
+                                        <field name="tan_suat_mua"/>
+                                    </group>
+                                </group>
+                            </page>
                             <page string="Thông tin chi tiết" name="chi_tiet">
                                 <group attrs="{'invisible': [('loai_khach_hang', '!=', 'doanh_nghiep')]}">
                                     <group string="Thông tin doanh nghiệp">
@@ -107,11 +149,68 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page string="Cơ hội bán hàng" name="co_hoi">
+                                <field name="co_hoi_ids">
+                                    <tree>
+                                        <field name="ma_co_hoi"/>
+                                        <field name="ten_co_hoi"/>
+                                        <field name="gia_tri_du_kien"/>
+                                        <field name="giai_doan"/>
+                                        <field name="trang_thai" widget="badge"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Đơn hàng" name="don_hang">
+                                <field name="don_hang_ids">
+                                    <tree>
+                                        <field name="ma_don_hang"/>
+                                        <field name="ngay_dat"/>
+                                        <field name="tong_gia_tri"/>
+                                        <field name="trang_thai" widget="badge"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Hóa đơn" name="hoa_don">
+                                <field name="hoa_don_ids">
+                                    <tree>
+                                        <field name="so_hoa_don"/>
+                                        <field name="ngay_xuat"/>
+                                        <field name="tong_thanh_toan"/>
+                                        <field name="con_no"/>
+                                        <field name="trang_thai" widget="badge"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Tương tác" name="tuong_tac">
+                                <field name="lich_su_tuong_tac_ids">
+                                    <tree>
+                                        <field name="ngay_tuong_tac"/>
+                                        <field name="tieu_de"/>
+                                        <field name="loai_tuong_tac"/>
+                                        <field name="nhan_vien_phu_trach_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Khiếu nại" name="khieu_nai">
+                                <field name="khieu_nai_ids">
+                                    <tree>
+                                        <field name="ma_khieu_nai"/>
+                                        <field name="tieu_de"/>
+                                        <field name="do_uu_tien" widget="badge"/>
+                                        <field name="trang_thai" widget="badge"/>
+                                    </tree>
+                                </field>
+                            </page>
                             <page string="Ghi chú" name="ghi_chu">
                                 <field name="ghi_chu"/>
                             </page>
                         </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                        <field name="activity_ids"/>
+                    </div>
                 </form>
             </field>
         </record>

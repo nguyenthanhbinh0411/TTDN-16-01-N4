@@ -14,6 +14,78 @@
             action="action_khach_hang"
             sequence="10"/>
         
+        <!-- CRM & Bán hàng -->
+        <menuitem id="menu_crm_ban_hang"
+            name="CRM &amp; Bán hàng"
+            parent="menu_qlkh_root"
+            sequence="20"/>
+        
+        <menuitem id="menu_co_hoi_ban_hang"
+            name="Cơ hội bán hàng"
+            parent="menu_crm_ban_hang"
+            action="action_co_hoi_ban_hang"
+            sequence="1"/>
+        
+        <menuitem id="menu_don_hang"
+            name="Đơn hàng"
+            parent="menu_crm_ban_hang"
+            action="action_don_hang"
+            sequence="2"/>
+        
+        <menuitem id="menu_giao_hang"
+            name="Giao hàng"
+            parent="menu_crm_ban_hang"
+            action="action_giao_hang"
+            sequence="3"/>
+        
+        <!-- Tài chính -->
+        <menuitem id="menu_tai_chinh"
+            name="Tài chính"
+            parent="menu_qlkh_root"
+            sequence="30"/>
+        
+        <menuitem id="menu_hoa_don"
+            name="Hóa đơn"
+            parent="menu_tai_chinh"
+            action="action_hoa_don"
+            sequence="1"/>
+        
+        <menuitem id="menu_thanh_toan"
+            name="Thanh toán"
+            parent="menu_tai_chinh"
+            action="action_thanh_toan"
+            sequence="2"/>
+        
+        <menuitem id="menu_cong_no"
+            name="Công nợ khách hàng"
+            parent="menu_tai_chinh"
+            action="action_cong_no_khach_hang"
+            sequence="3"/>
+        
+        <!-- Chăm sóc khách hàng -->
+        <menuitem id="menu_cham_soc_kh"
+            name="Chăm sóc khách hàng"
+            parent="menu_qlkh_root"
+            sequence="40"/>
+        
+        <menuitem id="menu_lich_su_tuong_tac"
+            name="Lịch sử tương tác"
+            parent="menu_cham_soc_kh"
+            action="action_lich_su_tuong_tac"
+            sequence="1"/>
+        
+        <menuitem id="menu_khieu_nai_phan_hoi"
+            name="Khiếu nại &amp; Phản hồi"
+            parent="menu_cham_soc_kh"
+            action="action_khieu_nai_phan_hoi"
+            sequence="2"/>
+        
+        <menuitem id="menu_loyalty_program"
+            name="Chương trình thân thiết"
+            parent="menu_cham_soc_kh"
+            action="action_loyalty_program"
+            sequence="3"/>
+        
         <!-- Hidden - Moved to Quan ly van ban module -->
         <!-- <menuitem id="menu_hop_dong"
             name="Hợp đồng"

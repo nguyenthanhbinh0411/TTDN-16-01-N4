@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Mail Template cho thông báo văn bản đi -->
+        <record id="mail_template_van_ban_di_notification" model="mail.template">
+            <field name="name">Thông báo văn bản đi</field>
+            <field name="model_id" ref="model_van_ban_di"/>
+            <field name="email_from">nguyenbinh041104@gmail.com</field>
+            <field name="email_to">${object.khach_hang_id.email}</field>
+            <field name="subject">Thông báo văn bản đi: ${object.so_ky_hieu}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <h2 style="color: #333;">Thông báo văn bản đi</h2>
+
+    <p>Kính gửi: <strong>${object.khach_hang_id.ten_khach_hang}</strong></p>
+
+    <p>Chúng tôi xin thông báo về văn bản đi với thông tin như sau:</p>
+
+    <table style="border-collapse: collapse; width: 100%; margin: 20px 0;">
+        <tr style="background-color: #f5f5f5;">
+            <td style="border: 1px solid #ddd; padding: 8px;"><strong>Số/Ký hiệu:</strong></td>
+            <td style="border: 1px solid #ddd; padding: 8px;">${object.so_ky_hieu}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #ddd; padding: 8px;"><strong>Ngày văn bản:</strong></td>
+            <td style="border: 1px solid #ddd; padding: 8px;">${object.ngay_van_ban}</td>
+        </tr>
+        <tr style="background-color: #f5f5f5;">
+            <td style="border: 1px solid #ddd; padding: 8px;"><strong>Nơi nhận:</strong></td>
+            <td style="border: 1px solid #ddd; padding: 8px;">${object.noi_nhan}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #ddd; padding: 8px;"><strong>Người ký:</strong></td>
+            <td style="border: 1px solid #ddd; padding: 8px;">${object.nguoi_ky}</td>
+        </tr>
+        <tr style="background-color: #f5f5f5;">
+            <td style="border: 1px solid #ddd; padding: 8px;"><strong>Loại văn bản:</strong></td>
+            <td style="border: 1px solid #ddd; padding: 8px;">${object.loai_van_ban_id.ten_loai or ''}</td>
+        </tr>
+    </table>
+
+    <h3>Nội dung trích yếu:</h3>
+    <p style="background-color: #f9f9f9; padding: 15px; border-left: 4px solid #007bff;">
+        ${object.trich_yeu}
+    </p>
+
+    <p>Văn bản đã được phê duyệt và gửi đi vào ngày ${format_date(object.write_date)}.</p>
+
+    <p>Nếu có file đính kèm, vui lòng kiểm tra trong email này.</p>
+
+    <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+    <p style="color: #666; font-size: 12px;">
+        Email này được gửi tự động từ hệ thống quản lý văn bản.<br>
+        Vui lòng không trả lời email này.
+    </p>
+</div>
+            ]]></field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+    </data>
+</odoo></content>
+<parameter name="filePath">\\wsl.localhost\Ubuntu-22.04\home\easylove04\Business-Internship\addons\quan_ly_van_ban\views\mail_templates.xml

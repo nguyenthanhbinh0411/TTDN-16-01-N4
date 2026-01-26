@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Kanban View -->
+        <record id="view_thanh_toan_kanban" model="ir.ui.view">
+            <field name="name">thanh_toan.kanban</field>
+            <field name="model">thanh_toan</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="trang_thai" class="o_kanban_small_column">
+                    <field name="ma_thanh_toan"/>
+                    <field name="khach_hang_id"/>
+                    <field name="so_tien"/>
+                    <field name="ngay_thanh_toan"/>
+                    <field name="hinh_thuc"/>
+                    <field name="trang_thai"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_record_top mb-2">
+                                    <div>
+                                        <strong>
+                                            <i class="fa fa-credit-card" title="Mã thanh toán"/> <field name="ma_thanh_toan"/>
+                                        </strong>
+                                        <div>
+                                            <span t-if="record.hinh_thuc.raw_value == 'tien_mat'" class="badge">
+                                                <i class="fa fa-money" title="Tiền mặt"/> Tiền mặt
+                                            </span>
+                                            <span t-elif="record.hinh_thuc.raw_value == 'chuyen_khoan'" class="badge">
+                                                <i class="fa fa-bank" title="Chuyển khoản"/> Chuyển khoản
+                                            </span>
+                                            <span t-elif="record.hinh_thuc.raw_value == 'the'" class="badge">
+                                                <i class="fa fa-credit-card" title="Thẻ"/> Thẻ
+                                            </span>
+                                            <span t-else="" class="badge badge-warning">
+                                                <i class="fa fa-question" title="Khác"/> Khác
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span t-if="record.trang_thai.raw_value == 'da_xac_nhan'" class="badge badge-success">Đã xác nhận</span>
+                                        <span t-else="" class="badge badge-warning">Chờ xác nhận</span>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div>
+                                        <div>Khách hàng</div>
+                                        <div>
+                                            <field name="khach_hang_id"/>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>SỐ tiền</div>
+                                        <div class="monetary-large">
+                                            <field name="so_tien" widget="monetary"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom mt-3">
+                                    <div>
+                                        <div>
+                                            <i class="fa fa-calendar" title="Ngày thanh toán"/>
+                                            <span>
+                                                <field name="ngay_thanh_toan" widget="date"/>
+                                            </span>
+                                        </div>
+                                        <span t-if="record.trang_thai.raw_value == 'da_xac_nhan'" class="badge badge-success">Đã xác nhận</span>
+                                        <span t-else="" class="badge badge-warning">Chờ xác nhận</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_thanh_toan_form" model="ir.ui.view">
+            <field name="name">thanh_toan.form</field>
+            <field name="model">thanh_toan</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_xac_nhan" string="Xác nhận thanh toán" type="object" class="btn-success" attrs="{'invisible': [('trang_thai', '!=', 'cho_xac_nhan')]}"/>
+                        <button name="action_huy" string="Hủy" type="object" class="btn-danger" attrs="{'invisible': [('trang_thai', '!=', 'cho_xac_nhan')]}"/>
+                        <field name="trang_thai" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <div>Phiếu thanh toán</div>
+                            <h1>
+                                <field name="ma_thanh_toan" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Thông tin thanh toán">
+                                <field name="hoa_don_id"/>
+                                <field name="khach_hang_id"/>
+                                <field name="hinh_thuc" widget="badge"/>
+                            </group>
+                            <group string="Số tiền &amp; Ngày">
+                                <div>
+                                    <div>Số tiền thanh toán</div>
+                                    <field name="so_tien" widget="monetary"/>
+                                    <field name="don_vi_tien" invisible="1"/>
+                                </div>
+                                <field name="ngay_thanh_toan"/>
+                            </group>
+                        </group>
+                        <group string="Thông tin chuyển khoản" attrs="{'invisible': [('hinh_thuc', '!=', 'chuyen_khoan')]}">
+                            <group>
+                                <field name="ten_ngan_hang"/>
+                                <field name="so_tai_khoan"/>
+                            </group>
+                            <group>
+                                <field name="chu_tai_khoan"/>
+                                <field name="ma_giao_dich"/>
+                            </group>
+                        </group>
+                        <group string="Xác nhận" attrs="{'invisible': [('trang_thai', '!=', 'da_xac_nhan')]}">
+                            <group>
+                                <field name="nguoi_xac_nhan_id"/>
+                                <field name="ngay_xac_nhan"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="file_chung_tu" filename="file_chung_tu_name"/>
+                            <field name="file_chung_tu_name" invisible="1"/>
+                        </group>
+                        <field name="ghi_chu" placeholder="Ghi chú thanh toán..."/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="view_thanh_toan_tree" model="ir.ui.view">
+            <field name="name">thanh_toan.tree</field>
+            <field name="model">thanh_toan</field>
+            <field name="arch" type="xml">
+                <tree decoration-warning="trang_thai == 'cho_xac_nhan'" decoration-success="trang_thai == 'da_xac_nhan'">
+                    <field name="ma_thanh_toan"/>
+                    <field name="hoa_don_id"/>
+                    <field name="khach_hang_id"/>
+                    <field name="ngay_thanh_toan"/>
+                    <field name="so_tien" sum="Tổng"/>
+                    <field name="hinh_thuc"/>
+                    <field name="trang_thai" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_thanh_toan_search" model="ir.ui.view">
+            <field name="name">thanh_toan.search</field>
+            <field name="model">thanh_toan</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="ma_thanh_toan" string="Mã thanh toán" filter_domain="['|', ('ma_thanh_toan', 'ilike', self), ('ma_giao_dich', 'ilike', self)]"/>
+                    <field name="hoa_don_id"/>
+                    <field name="khach_hang_id"/>
+                    <separator/>
+                    <filter string="Chờ xác nhận" name="cho_xac_nhan" domain="[('trang_thai', '=', 'cho_xac_nhan')]"/>
+                    <filter string="Đã xác nhận" name="da_xac_nhan" domain="[('trang_thai', '=', 'da_xac_nhan')]"/>
+                    <separator/>
+                    <filter string="Tiền mặt" name="tien_mat" domain="[('hinh_thuc', '=', 'tien_mat')]"/>
+                    <filter string="Chuyển khoản" name="chuyen_khoan" domain="[('hinh_thuc', '=', 'chuyen_khoan')]"/>
+                    <filter string="Thẻ" name="the" domain="[('hinh_thuc', '=', 'the')]"/>
+                    <separator/>
+                    <filter string="Hôm nay" name="today" domain="[('ngay_thanh_toan', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tuần này" name="this_week" domain="[('ngay_thanh_toan', '>=', (context_today() - relativedelta(days=context_today().weekday())).strftime('%Y-%m-%d')), ('ngay_thanh_toan', '&lt;=', (context_today() + relativedelta(days=6-context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tháng này" name="this_month" domain="[('ngay_thanh_toan', '>=', time.strftime('%Y-%m-01')), ('ngay_thanh_toan', '&lt;=', (datetime.date.today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                    <filter string="Giá trị lớn (≥10tr)" name="high_value" domain="[('so_tien', '>=', 10000000)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Hóa đơn" name="group_hoa_don" context="{'group_by': 'hoa_don_id'}"/>
+                        <filter string="Hình thức" name="group_hinh_thuc" context="{'group_by': 'hinh_thuc'}"/>
+                        <filter string="Trạng thái" name="group_trang_thai" context="{'group_by': 'trang_thai'}"/>
+                        <filter string="Khách hàng" name="group_khach_hang" context="{'group_by': 'khach_hang_id'}"/>
+                        <filter string="Ngày thanh toán" name="group_ngay" context="{'group_by': 'ngay_thanh_toan'}"/>
+                        <filter string="Tháng" name="group_month" context="{'group_by': 'ngay_thanh_toan:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_thanh_toan" model="ir.actions.act_window">
+            <field name="name">Thanh toán</field>
+            <field name="res_model">thanh_toan</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_thanh_toan_search"/>
+        </record>
+    </data>
+</odoo>

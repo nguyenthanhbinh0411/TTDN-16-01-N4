@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Thêm nút thống kê Văn bản đến/đi -->
+        <record id="view_khach_hang_form_inherit_van_ban_buttons" model="ir.ui.view">
+            <field name="name">khach_hang.form.van_ban.buttons</field>
+            <field name="model">khach_hang</field>
+            <field name="inherit_id" ref="quan_ly_khach_hang.view_khach_hang_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_view_van_ban_den" type="object" class="oe_stat_button" icon="fa-inbox">
+                        <field name="van_ban_den_count" widget="statinfo" string="VB đến"/>
+                    </button>
+                    <button name="action_view_van_ban_di" type="object" class="oe_stat_button" icon="fa-send">
+                        <field name="van_ban_di_count" widget="statinfo" string="VB đi"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Bổ sung danh sách văn bản đến/đi -->
+        <record id="view_khach_hang_form_inherit_van_ban_tab" model="ir.ui.view">
+            <field name="name">khach_hang.form.van_ban.tab</field>
+            <field name="model">khach_hang</field>
+            <field name="inherit_id" ref="quan_ly_khach_hang.view_khach_hang_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='van_ban']/group" position="after">
+                    <group>
+                        <group string="Văn bản đến">
+                            <field name="van_ban_den_ids" nolabel="1">
+                                <tree>
+                                    <field name="so_ky_hieu"/>
+                                    <field name="trich_yeu"/>
+                                    <field name="ngay_den"/>
+                                    <field name="loai_van_ban_id"/>
+                                    <field name="trang_thai"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group string="Văn bản đi">
+                            <field name="van_ban_di_ids" nolabel="1">
+                                <tree>
+                                    <field name="so_ky_hieu"/>
+                                    <field name="trich_yeu"/>
+                                    <field name="ngay_van_ban"/>
+                                    <field name="ngay_gui"/>
+                                    <field name="loai_van_ban_id"/>
+                                    <field name="trang_thai"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

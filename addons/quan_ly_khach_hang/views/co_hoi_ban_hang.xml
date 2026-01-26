@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Kanban View - Pipeline -->
+        <record id="view_co_hoi_ban_hang_kanban" model="ir.ui.view">
+            <field name="name">co_hoi_ban_hang.kanban</field>
+            <field name="model">co_hoi_ban_hang</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="giai_doan" class="o_kanban_small_column o_opportunity_kanban">
+                    <field name="ten_co_hoi"/>
+                    <field name="khach_hang_id"/>
+                    <field name="gia_tri_du_kien"/>
+                    <field name="ty_le_thanh_cong"/>
+                    <field name="ngay_du_kien_chot"/>
+                    <field name="nhan_vien_phu_trach_id"/>
+                    <field name="trang_thai"/>
+                    <field name="nguon_co_hoi"/>
+                    <field name="ngay_tao"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_record_top mb-2">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="ten_co_hoi"/>
+                                        </strong>
+                                        <div>
+                                            <span class="badge badge-primary">
+                                                <i class="fa fa-tag" title="Nguồn cơ hội"/> <field name="nguon_co_hoi"/>
+                                            </span>
+                                            <span class="badge badge-info" t-if="record.ngay_tao.raw_value">
+                                                <i class="fa fa-calendar" title="Ngày tạo"/> <field name="ngay_tao" widget="date"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span t-if="record.ty_le_thanh_cong.raw_value &gt;= 75" class="badge badge-success">
+                                            <field name="ty_le_thanh_cong"/>%
+                                        </span>
+                                        <span t-elif="record.ty_le_thanh_cong.raw_value &gt;= 50" class="badge badge-warning">
+                                            <field name="ty_le_thanh_cong"/>%
+                                        </span>
+                                        <span t-else="" class="badge badge-secondary">
+                                            <field name="ty_le_thanh_cong"/>%
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div>
+                                        <div>Khách hàng</div>
+                                        <field name="khach_hang_id"/>
+                                    </div>
+                                    <div>
+                                        <div>GIÁ TRỊ DỰ KIẾN</div>
+                                        <field name="gia_tri_du_kien" widget="monetary"/>
+                                    </div>
+                                    <div>
+                                        <div>Xác suất</div>
+                                        <span><field name="ty_le_thanh_cong"/>%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" t-attf-style="width: {{record.ty_le_thanh_cong.raw_value}}%;" role="progressbar"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom mt-3">
+                                    <div class="oe_kanban_bottom_left">
+                                        <i class="fa fa-clock-o" title="Thời gian"/>
+                                        <span>
+                                            <field name="ngay_du_kien_chot" widget="date"/>
+                                        </span>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="nhan_vien_phu_trach_id" widget="many2one_avatar" options="{'display_avatar_name': False}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_co_hoi_ban_hang_form" model="ir.ui.view">
+            <field name="name">co_hoi_ban_hang.form</field>
+            <field name="model">co_hoi_ban_hang</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_chuyen_giai_doan_tiep" string="Chuyển giai đoạn tiếp" type="object" class="btn-primary" attrs="{'invisible': [('giai_doan', 'in', ['thang', 'thua'])]}"/>
+                        <button name="action_danh_dau_thang" string="Đánh dấu thắng" type="object" class="btn-success" attrs="{'invisible': [('giai_doan', 'in', ['thang', 'thua'])]}"/>
+                        <button name="action_danh_dau_thua" string="Đánh dấu thua" type="object" class="btn-danger" attrs="{'invisible': [('giai_doan', 'in', ['thang', 'thua'])]}"/>
+                        <field name="giai_doan" widget="statusbar" statusbar_visible="moi,du_dieu_kien,bao_gia,dam_phan,thang"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_bao_gia" type="object" class="oe_stat_button">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="bao_gia_count"/>
+                                    </span>
+                                    <span class="o_stat_text">Báo giá</span>
+                                </div>
+                            </button>
+                            <button name="%(action_don_hang)d" type="action" class="oe_stat_button" context="{'default_khach_hang_id': khach_hang_id}">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value">
+                                        <i class="fa fa-shopping-cart" title="Tạo đơn hàng"/>
+                                    </span>
+                                    <span class="o_stat_text">Tạo đơn hàng</span>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="ma_co_hoi"/>
+                            <h1>
+                                <field name="ma_co_hoi" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="ten_co_hoi"/>
+                                <field name="khach_hang_id"/>
+                                <field name="nhan_vien_phu_trach_id" widget="many2one_avatar"/>
+                                <field name="nguon_co_hoi"/>
+                                <field name="trang_thai" widget="badge"/>
+                            </group>
+                            <group>
+                                <div>Giá trị dự kiến</div>
+                                <div>
+                                    <field name="gia_tri_du_kien" widget="monetary"/>
+                                </div>
+                                <field name="don_vi_tien" invisible="1"/>
+                                <div>Xác suất thành công</div>
+                                <field name="ty_le_thanh_cong" widget="progressbar"/>
+                                <div>
+                                    <field name="ty_le_thanh_cong"/>%
+                                </div>
+                                <field name="ngay_tao"/>
+                                <field name="ngay_du_kien_chot"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Mô tả">
+                                <field name="mo_ta" placeholder="Mô tả cơ hội bán hàng..."/>
+                            </page>
+                            <page string="Báo giá" name="bao_gia">
+                                <field name="bao_gia_ids">
+                                    <tree>
+                                        <field name="ma_bao_gia"/>
+                                        <field name="ten_bao_gia"/>
+                                        <field name="ngay_tao"/>
+                                        <field name="tong_gia_tri"/>
+                                        <field name="trang_thai"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Lý do thất bại" attrs="{'invisible': [('giai_doan', '!=', 'thua')]}">
+                                <field name="ly_do_that_bai" placeholder="Ghi rõ lý do thua..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="view_co_hoi_ban_hang_tree" model="ir.ui.view">
+            <field name="name">co_hoi_ban_hang.tree</field>
+            <field name="model">co_hoi_ban_hang</field>
+            <field name="arch" type="xml">
+                <tree decoration-success="trang_thai == 'thang'" decoration-danger="trang_thai == 'thua'" decoration-info="giai_doan == 'dam_phan'" decoration-bf="ty_le_thanh_cong &gt;= 75">
+                    <field name="ma_co_hoi" decoration-bf="1"/>
+                    <field name="ten_co_hoi"/>
+                    <field name="khach_hang_id"/>
+                    <field name="nhan_vien_phu_trach_id" widget="many2one_avatar"/>
+                    <field name="gia_tri_du_kien" widget="monetary" sum="Tổng giá trị"/>
+                    <field name="ty_le_thanh_cong" widget="progressbar"/>
+                    <field name="giai_doan" widget="badge"/>
+                    <field name="ngay_du_kien_chot"/>
+                    <field name="trang_thai" widget="badge" decoration-success="trang_thai == 'thang'" decoration-danger="trang_thai == 'thua'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_co_hoi_ban_hang_search" model="ir.ui.view">
+            <field name="name">co_hoi_ban_hang.search</field>
+            <field name="model">co_hoi_ban_hang</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="ten_co_hoi" string="Tên cơ hội" filter_domain="['|', ('ten_co_hoi', 'ilike', self), ('ma_co_hoi', 'ilike', self)]"/>
+                    <field name="khach_hang_id"/>
+                    <field name="nhan_vien_phu_trach_id"/>
+                    <separator/>
+                    <filter string="Cơ hội của tôi" name="my_opportunities" domain="[('nhan_vien_phu_trach_id', '=', uid)]"/>
+                    <filter string="Đang mở" name="mo" domain="[('trang_thai', '=', 'mo')]"/>
+                    <filter string="Đã thắng" name="thang" domain="[('trang_thai', '=', 'thang')]"/>
+                    <filter string="Đã thua" name="thua" domain="[('trang_thai', '=', 'thua')]"/>
+                    <separator/>
+                    <filter string="Xác suất cao (≥75%)" name="high_probability" domain="[('ty_le_thanh_cong', '>=', 75)]"/>
+                    <filter string="Giá trị lớn (≥100tr)" name="high_value" domain="[('gia_tri_du_kien', '>=', 100000000)]"/>
+                    <separator/>
+                    <filter string="Chốt tuần này" name="closing_this_week" domain="[('ngay_du_kien_chot', '>=', (context_today() - relativedelta(days=context_today().weekday())).strftime('%Y-%m-%d')), ('ngay_du_kien_chot', '&lt;=', (context_today() + relativedelta(days=6-context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Chốt tháng này" name="closing_this_month" domain="[('ngay_du_kien_chot', '>=', time.strftime('%Y-%m-01')), ('ngay_du_kien_chot', '&lt;=', (datetime.date.today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Giai đoạn" name="group_giai_doan" context="{'group_by': 'giai_doan'}"/>
+                        <filter string="Nhân viên phụ trách" name="group_nhan_vien" context="{'group_by': 'nhan_vien_phu_trach_id'}"/>
+                        <filter string="Nguồn cơ hội" name="group_nguon" context="{'group_by': 'nguon_co_hoi'}"/>
+                        <filter string="Trạng thái" name="group_trang_thai" context="{'group_by': 'trang_thai'}"/>
+                        <filter string="Tháng tạo" name="group_month" context="{'group_by': 'ngay_tao:month'}"/>
+                        <filter string="Ngày chốt dự kiến" name="group_closing_date" context="{'group_by': 'ngay_du_kien_chot'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_co_hoi_ban_hang" model="ir.actions.act_window">
+            <field name="name">Cơ hội bán hàng</field>
+            <field name="res_model">co_hoi_ban_hang</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_co_hoi_ban_hang_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tạo cơ hội bán hàng mới
+                </p>
+                <p>
+                    Quản lý pipeline bán hàng từ Lead đến Deal thành công
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

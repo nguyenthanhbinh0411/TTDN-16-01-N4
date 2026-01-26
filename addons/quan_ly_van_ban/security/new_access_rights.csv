@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_lich_su_phien_ban,access.lich.su.phien.ban,model_lich_su_phien_ban,base.group_user,1,1,1,1
+access_chu_ky_dien_tu,access.chu.ky.dien.tu,model_chu_ky_dien_tu,base.group_user,1,1,1,0
+access_mau_van_ban,access.mau.van.ban,model_mau_van_ban,base.group_user,1,1,1,1
+access_luong_duyet,access.luong.duyet,model_luong_duyet,base.group_user,1,0,0,0
+access_luong_duyet_manager,access.luong.duyet.manager,model_luong_duyet,base.group_system,1,1,1,1
+access_buoc_duyet,access.buoc.duyet,model_buoc_duyet,base.group_user,1,0,0,0
+access_buoc_duyet_manager,access.buoc.duyet.manager,model_buoc_duyet,base.group_system,1,1,1,1
+access_lich_su_duyet,access.lich.su.duyet,model_lich_su_duyet,base.group_user,1,1,1,0

@@ -35,6 +35,12 @@
     ],
     # only loaded in demonstration mode
     'demo': [],
+    'assets': {
+        'web.assets_backend': [
+            'nhan_su/static/src/css/nhan_su.css',
+            'nhan_su/static/src/js/nhan_su_kanban.js',
+        ],
+    },
     'installable': True,
     'application': True,
 }

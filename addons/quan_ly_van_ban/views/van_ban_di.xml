@@ -9,12 +9,8 @@
                 <form string="Văn bản đi">
                     <header>
                         <button name="action_gui_duyet" string="Gửi duyệt" type="object" 
-                                class="oe_highlight" attrs="{'invisible': [('trang_thai', '!=', 'du_thao')]}"/>
-                        <button name="action_duyet" string="Duyệt" type="object" 
-                                class="oe_highlight" attrs="{'invisible': [('trang_thai', '!=', 'cho_duyet')]}"/>
-                        <button name="action_gui_van_ban" string="Đã gửi" type="object" 
-                                class="oe_highlight" attrs="{'invisible': [('trang_thai', '!=', 'da_duyet')]}"/>
-                        <field name="trang_thai" widget="statusbar" statusbar_visible="du_thao,cho_duyet,da_duyet,da_gui"/>
+                            class="oe_highlight" attrs="{'invisible': [('trang_thai', '!=', 'du_thao')]}"/>
+                        <field name="trang_thai" widget="statusbar" statusbar_visible="du_thao,cho_duyet,da_duyet,da_gui,hoan_tat"/>
                     </header>
                     <sheet>
                         <group>
@@ -24,7 +20,10 @@
                                 <field name="ngay_van_ban"/>
                                 <field name="ngay_gui" attrs="{'readonly': [('trang_thai', '!=', 'da_gui')]}"/>
                                 <field name="noi_nhan"/>
+                                <field name="kh_dien_thoai"/>
+                                <field name="kh_email"/>
                                 <field name="nguoi_ky"/>
+                                <field name="khach_hang_id"/>
                             </group>
                             <group>
                                 <field name="do_khan"/>
@@ -32,6 +31,10 @@
                                 <field name="nguoi_soan_thao_id"/>
                                 <field name="don_vi_soan_thao_id"/>
                                 <field name="hop_dong_id"/>
+                                <field name="van_ban_den_id"/>
+                                <field name="co_hoi_id"/>
+                                <field name="approver_tp_id"/>
+                                <field name="approver_gd_id"/>
                             </group>
                         </group>
                         <group>
@@ -45,12 +48,34 @@
                                 <field name="file_dinh_kem" filename="ten_file"/>
                                 <field name="ten_file" invisible="1"/>
                             </group>
+                            <group>
+                                <field name="mau_van_ban_id"/>
+                                <button name="action_ap_dung_mau" string="Áp dụng mẫu" type="object" class="btn-secondary" attrs="{'invisible': [('mau_van_ban_id', '=', False)]}"/>
+                            </group>
                         </group>
                         <group string="Thông tin khác">
                             <group>
-                                <field name="nguoi_tao_id"/>
-                                <field name="ngay_tao"/>
+                                <field name="nguoi_tao_id" readonly="1"/>
+                                <field name="ngay_tao" readonly="1"/>
+                                <field name="tp_da_duyet"/>
+                                <field name="tp_ngay_duyet"/>
+                                <field name="gd_da_duyet"/>
+                                <field name="gd_ngay_duyet"/>
+                                <field name="da_ky_duyet"/>
+                                <field name="ngay_ky_duyet"/>
                             </group>
+                        </group>
+                        <group string="Lịch sử duyệt">
+                            <field name="approval_log_ids" nolabel="1" readonly="1">
+                                <tree string="Lịch sử duyệt">
+                                    <field name="role"/>
+                                    <field name="action"/>
+                                    <field name="nguoi_duyet_id"/>
+                                    <field name="user_id"/>
+                                    <field name="ngay_duyet"/>
+                                    <field name="ghi_chu"/>
+                                </tree>
+                            </field>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -71,6 +96,7 @@
                     <field name="ngay_van_ban"/>
                     <field name="ngay_gui"/>
                     <field name="noi_nhan"/>
+                    <field name="khach_hang_id"/>
                     <field name="trich_yeu"/>
                     <field name="loai_van_ban_id"/>
                     <field name="do_khan"/>
@@ -89,6 +115,7 @@
                     <field name="noi_nhan"/>
                     <field name="trich_yeu"/>
                     <field name="nguoi_soan_thao_id"/>
+                    <field name="khach_hang_id"/>
                     <filter string="Dự thảo" name="du_thao" domain="[('trang_thai', '=', 'du_thao')]"/>
                     <filter string="Chờ duyệt" name="cho_duyet" domain="[('trang_thai', '=', 'cho_duyet')]"/>
                     <filter string="Đã duyệt" name="da_duyet" domain="[('trang_thai', '=', 'da_duyet')]"/>
@@ -110,6 +137,10 @@
             <field name="name">Văn bản đi</field>
             <field name="res_model">van_ban_di</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_van_ban_di_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('view_van_ban_di_form')})
+            ]"/>
         </record>
     </data>
 </odoo>

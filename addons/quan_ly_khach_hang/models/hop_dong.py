@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
-from datetime import date
+from datetime import date, timedelta
 
 class HopDong(models.Model):
     _name = 'hop_dong'
@@ -70,16 +70,21 @@ class HopDong(models.Model):
     
     # Workflow methods
     def action_submit_for_approval(self):
-        """Chuyển trạng thái từ Nháp sang Chờ duyệt"""
+        """Chuyển trạng thái từ Nháp sang Chờ duyệt và tạo văn bản đến."""
         for record in self:
             if record.trang_thai == 'nhap':
                 record.trang_thai = 'cho_duyet'
+                record._create_van_ban_den()
     
     def action_approve(self):
-        """Duyệt hợp đồng - chuyển sang Hiệu lực"""
+        """Duyệt hợp đồng - chuyển sang Hiệu lực và tạo văn bản đi."""
         for record in self:
             if record.trang_thai == 'cho_duyet':
                 record.trang_thai = 'hieu_luc'
+                record._create_van_ban_di()
+                van_ban_den = self.env['van_ban_den'].search([('hop_dong_id', '=', record.id)], limit=1)
+                if van_ban_den:
+                    van_ban_den.write({'trang_thai': 'da_xu_ly'})
     
     def action_cancel(self):
         """Hủy hợp đồng"""
@@ -93,27 +98,73 @@ class HopDong(models.Model):
             if record.trang_thai == 'hieu_luc':
                 record.trang_thai = 'het_han'
 
-    @api.model
-    def create(self, vals):
-        """Tạo hợp đồng và sinh một văn bản đến (van_ban_den) để ghi nhận hồ sơ.
-        Tránh tạo trùng lặp nếu đã tồn tại van_ban_den cho hợp đồng này.
-        """
-        record = super(HopDong, self).create(vals)
-        try:
-            van_ban_obj = self.env.get('van_ban_den')
-            if van_ban_obj:
-                exists = van_ban_obj.search([('hop_dong_id', '=', record.id)], limit=1)
-                if not exists:
-                    so_vb = 'HD-%s' % (record.ma_hop_dong or record.id)
-                    van_ban_obj.create({
-                        'so_van_ban_den': so_vb,
-                        'ten_van_ban': 'Hợp đồng: %s' % (record.ten_hop_dong or record.ma_hop_dong),
-                        'khach_hang_id': record.khach_hang_id.id or False,
-                        'hop_dong_id': record.id,
-                        'file_van_ban': record.file_hop_dong,
-                        'file_van_ban_name': record.file_hop_dong_name,
-                        'trang_thai_xu_ly': 'chua_xu_ly',
-                    })
-        except Exception:
-            pass
-        return record
+    def _get_loai_vb(self, ma_loai, ten):
+        loai_vb = self.env['loai_van_ban'].search([('ma_loai', '=', ma_loai)], limit=1)
+        if not loai_vb:
+            loai_vb = self.env['loai_van_ban'].create({
+                'ma_loai': ma_loai,
+                'ten_loai': ten,
+                'mo_ta': ten,
+                'hoat_dong': True,
+            })
+        return loai_vb
+
+    def _create_van_ban_den(self):
+        self.ensure_one()
+        if self.env['van_ban_den'].search([('hop_dong_id', '=', self.id)], limit=1):
+            return
+        loai_vb = self._get_loai_vb('HD', 'Hợp đồng')
+        count = self.env['van_ban_den'].search_count([
+            ('loai_van_ban_id', '=', loai_vb.id),
+            ('ngay_den', '>=', fields.Date.today().replace(month=1, day=1))
+        ]) + 1
+        so_ky_hieu = f"HD/{count:04d}/{fields.Date.today().year}"
+        self.env['van_ban_den'].create({
+            'so_ky_hieu': so_ky_hieu,
+            'ngay_den': fields.Date.today(),
+            'ngay_van_ban': self.ngay_ky or fields.Date.today(),
+            'noi_ban_hanh': self.khach_hang_id.ten_khach_hang if self.khach_hang_id else 'Khách hàng',
+            'nguoi_ky': '',
+            'trich_yeu': f"Hợp đồng: {self.ten_hop_dong} - Khách hàng: {self.khach_hang_id.ten_khach_hang if self.khach_hang_id else ''}",
+            'loai_van_ban_id': loai_vb.id,
+            'do_khan': 'thuong',
+            'do_mat': 'binh_thuong',
+            'nguoi_xu_ly_id': self.nhan_vien_phu_trach_id.id if self.nhan_vien_phu_trach_id else False,
+            'trang_thai': 'moi',
+            'hop_dong_id': self.id,
+            'khach_hang_id': self.khach_hang_id.id if self.khach_hang_id else False,
+            'han_xu_ly': fields.Date.today() + timedelta(days=3),
+            'file_dinh_kem': self.file_hop_dong,
+            'ten_file': self.file_hop_dong_name,
+            'ghi_chu': f"Văn bản tạo tự động khi gửi duyệt hợp đồng {self.ma_hop_dong}",
+        })
+
+    def _create_van_ban_di(self):
+        self.ensure_one()
+        if self.env['van_ban_di'].search([('hop_dong_id', '=', self.id)], limit=1):
+            return
+        loai_vb = self._get_loai_vb('HD', 'Hợp đồng')
+        count = self.env['van_ban_di'].search_count([
+            ('loai_van_ban_id', '=', loai_vb.id),
+            ('ngay_van_ban', '>=', fields.Date.today().replace(month=1, day=1))
+        ]) + 1
+        so_ky_hieu = f"HD/{count:04d}/{fields.Date.today().year}"
+        self.env['van_ban_di'].create({
+            'so_ky_hieu': so_ky_hieu,
+            'ngay_van_ban': fields.Date.today(),
+            'ngay_gui': fields.Date.today(),
+            'noi_nhan': self.khach_hang_id.ten_khach_hang if self.khach_hang_id else 'Khách hàng',
+            'nguoi_ky': self.env.user.name,
+            'trich_yeu': f"Duyệt hợp đồng: {self.ten_hop_dong} - Khách hàng: {self.khach_hang_id.ten_khach_hang if self.khach_hang_id else ''}",
+            'loai_van_ban_id': loai_vb.id,
+            'do_khan': 'thuong',
+            'do_mat': 'binh_thuong',
+            'nguoi_soan_thao_id': self.nhan_vien_phu_trach_id.id if self.nhan_vien_phu_trach_id else False,
+            'don_vi_soan_thao_id': False,
+            'trang_thai': 'da_gui',
+            'hop_dong_id': self.id,
+            'khach_hang_id': self.khach_hang_id.id if self.khach_hang_id else False,
+            'file_dinh_kem': self.file_hop_dong,
+            'ten_file': self.file_hop_dong_name,
+            'ghi_chu': f"Văn bản tạo tự động khi duyệt hợp đồng {self.ma_hop_dong}",
+        })

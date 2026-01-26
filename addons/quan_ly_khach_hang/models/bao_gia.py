@@ -12,6 +12,7 @@ class BaoGia(models.Model):
     ma_bao_gia = fields.Char("Mã báo giá", required=True, copy=False)
     ten_bao_gia = fields.Char("Tên báo giá", required=True)
     khach_hang_id = fields.Many2one('khach_hang', string="Khách hàng", required=True, ondelete='cascade')
+    co_hoi_id = fields.Many2one('co_hoi_ban_hang', string="Cơ hội bán hàng", ondelete='set null')
     
     ngay_tao = fields.Date("Ngày tạo", required=True, default=fields.Date.today)
     ngay_hieu_luc = fields.Date("Hiệu lực đến", default=lambda self: date.today() + timedelta(days=30))
@@ -53,6 +54,7 @@ class BaoGia(models.Model):
         for record in self:
             if record.trang_thai == 'nhap':
                 record.trang_thai = 'gui_khach'
+                record._create_van_ban_den()
     
     def action_customer_approve(self):
         """Khách hàng đồng ý báo giá"""
@@ -72,27 +74,43 @@ class BaoGia(models.Model):
             if record.trang_thai in ['nhap', 'gui_khach']:
                 record.trang_thai = 'het_han'
 
-    @api.model
-    def create(self, vals):
-        """Tạo báo giá và sinh một văn bản đến (van_ban_den) để ghi nhận hồ sơ.
-        Tránh tạo trùng lặp nếu đã tồn tại van_ban_den cho báo giá này.
-        """
-        record = super(BaoGia, self).create(vals)
-        try:
-            van_ban_obj = self.env.get('van_ban_den')
-            if van_ban_obj:
-                exists = van_ban_obj.search([('bao_gia_id', '=', record.id)], limit=1)
-                if not exists:
-                    so_vb = 'BG-%s' % (record.ma_bao_gia or record.id)
-                    van_ban_obj.create({
-                        'so_van_ban_den': so_vb,
-                        'ten_van_ban': 'Báo giá: %s' % (record.ten_bao_gia or record.ma_bao_gia),
-                        'khach_hang_id': record.khach_hang_id.id or False,
-                        'bao_gia_id': record.id,
-                        'file_van_ban': record.file_bao_gia,
-                        'file_van_ban_name': record.file_bao_gia_name,
-                        'trang_thai_xu_ly': 'chua_xu_ly',
-                    })
-        except Exception:
-            pass
-        return record
+    def _get_loai_vb(self, ma_loai, ten):
+        loai_vb = self.env['loai_van_ban'].search([('ma_loai', '=', ma_loai)], limit=1)
+        if not loai_vb:
+            loai_vb = self.env['loai_van_ban'].create({
+                'ma_loai': ma_loai,
+                'ten_loai': ten,
+                'mo_ta': ten,
+                'hoat_dong': True,
+            })
+        return loai_vb
+
+    def _create_van_ban_den(self):
+        self.ensure_one()
+        if self.env['van_ban_den'].search([('bao_gia_id', '=', self.id)], limit=1):
+            return
+        loai_vb = self._get_loai_vb('BG', 'Báo giá')
+        count = self.env['van_ban_den'].search_count([
+            ('loai_van_ban_id', '=', loai_vb.id),
+            ('ngay_den', '>=', fields.Date.today().replace(month=1, day=1))
+        ]) + 1
+        so_ky_hieu = f"BG/{count:04d}/{fields.Date.today().year}"
+        self.env['van_ban_den'].create({
+            'so_ky_hieu': so_ky_hieu,
+            'ngay_den': fields.Date.today(),
+            'ngay_van_ban': self.ngay_tao or fields.Date.today(),
+            'noi_ban_hanh': self.khach_hang_id.ten_khach_hang if self.khach_hang_id else 'Khách hàng',
+            'nguoi_ky': '',
+            'trich_yeu': f"Báo giá: {self.ten_bao_gia} - Khách hàng: {self.khach_hang_id.ten_khach_hang if self.khach_hang_id else ''}",
+            'loai_van_ban_id': loai_vb.id,
+            'do_khan': 'thuong',
+            'do_mat': 'binh_thuong',
+            'nguoi_xu_ly_id': self.nhan_vien_lap_id.id if self.nhan_vien_lap_id else False,
+            'trang_thai': 'moi',
+            'bao_gia_id': self.id,
+            'khach_hang_id': self.khach_hang_id.id if self.khach_hang_id else False,
+            'han_xu_ly': fields.Date.today() + timedelta(days=3),
+            'file_dinh_kem': self.file_bao_gia,
+            'ten_file': self.file_bao_gia_name,
+            'ghi_chu': f"Văn bản tạo tự động khi gửi báo giá {self.ma_bao_gia}",
+        })

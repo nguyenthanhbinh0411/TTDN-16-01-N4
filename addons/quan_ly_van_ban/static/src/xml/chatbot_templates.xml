@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template.quan_ly_van_ban_chatbot" xml:space="preserve">
+
+    <!-- Chatbot Dialog Template (Full Client Action) -->
+    <t t-name="quan_ly_van_ban.ChatbotDialog" owl="1">
+        <div class="o_chatbot_container d-flex flex-column h-100">
+            <!-- Header -->
+            <div class="o_chatbot_header bg-primary text-white p-3 d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <i class="fa fa-robot fa-lg me-2"></i>
+                    <h5 class="mb-0">AI Trợ Lý Nội Bộ</h5>
+                </div>
+                <div class="o_chatbot_actions">
+                    <button class="btn btn-sm btn-light me-2" t-on-click="clearHistory" title="Xóa lịch sử">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                    <button class="btn btn-sm btn-light" t-on-click="closeDialog" title="Đóng">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages Area -->
+            <div class="o_chatbot_messages flex-grow-1 overflow-auto p-3 bg-light" t-ref="chatMessages">
+                <!-- Welcome Message -->
+                <t t-if="state.messages.length === 0">
+                    <div class="o_chatbot_welcome text-center py-5">
+                        <i class="fa fa-comments fa-4x text-muted mb-3"></i>
+                        <h4>Xin chào! Tôi là AI trợ lý nội bộ</h4>
+                        <p class="text-muted">Tôi có thể giúp bạn tra cứu thông tin văn bản trong hệ thống ERP.</p>
+                        
+                        <!-- Gợi ý câu hỏi -->
+                        <div class="o_chatbot_suggestions mt-4">
+                            <p class="text-muted mb-2"><strong>Thử hỏi:</strong></p>
+                            <t t-foreach="suggestions" t-as="suggestion" t-key="suggestion">
+                                <button class="btn btn-outline-primary m-1" t-on-click="() => this.useSuggestion(suggestion)">
+                                    <i class="fa fa-lightbulb-o me-1"></i>
+                                    <t t-esc="suggestion"/>
+                                </button>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+
+                <!-- Chat Messages -->
+                <t t-foreach="state.messages" t-as="message" t-key="message_index">
+                    <div t-attf-class="o_chatbot_message mb-3 d-flex {{ message.type === 'user' ? 'justify-content-end' : 'justify-content-start' }}">
+                        <div t-attf-class="o_message_bubble p-3 rounded-3 {{ message.type === 'user' ? 'bg-primary text-white' : message.type === 'error' ? 'bg-danger text-white' : 'bg-white border shadow-sm' }}" style="max-width: 80%;">
+                            <div class="d-flex o_message_meta">
+                                <t t-if="message.type === 'user'">
+                                    <span class="o_avatar_circle"><i class="fa fa-user"></i></span>
+                                    <span class="fw-bold">Bạn</span>
+                                </t>
+                                <t t-elif="message.type === 'error'">
+                                    <span class="o_avatar_circle"><i class="fa fa-exclamation-triangle"></i></span>
+                                    <span class="fw-bold">Lỗi</span>
+                                </t>
+                                <t t-else="">
+                                    <img t-att-src="'/quan_ly_van_ban/static/src/css/tro-ly-AI.jpg'" class="o_avatar_img" alt="AI"/>
+                                    <span class="fw-bold text-primary">AI Trợ lý</span>
+                                    <span class="o_bot_badge" title="AI">i</span>
+                                </t>
+                                <small class="o_message_time" t-esc="message.time"/>
+                            </div>
+                            <!-- Content -->
+                            <div class="o_message_content" style="white-space: pre-wrap;" t-esc="message.content"/>
+                        </div>
+                    </div>
+                </t>
+
+                <!-- Loading Indicator -->
+                <t t-if="state.isLoading">
+                    <div class="o_chatbot_message mb-3 d-flex justify-content-start">
+                        <div class="o_message_bubble p-3 rounded-3 bg-white border shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-robot me-2 text-primary"></i>
+                                <span class="fw-bold text-primary">AI Trợ lý</span>
+                            </div>
+                            <div class="o_typing_indicator mt-2">
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="ms-2 text-muted">Đang xử lý...</span>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+
+            <!-- Input Area -->
+            <div class="o_chatbot_input p-3 bg-white border-top">
+                <div class="o_chatbot_model_select d-flex flex-wrap align-items-center gap-2 mb-2">
+                    <small class="text-muted fw-semibold">Mô hình AI:</small>
+                    <select
+                        class="form-select form-select-sm w-auto"
+                        t-on-change="onModelChange"
+                        t-model="state.selectedModel"
+                        t-att-disabled="state.isLoading"
+                    >
+                        <t t-foreach="modelOptions" t-as="option" t-key="option.id">
+                            <option t-att-value="option.id" t-esc="option.label"/>
+                        </t>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        placeholder="Nhập câu hỏi của bạn..."
+                        t-ref="chatInput"
+                        t-model="state.inputValue"
+                        t-on-keydown="onInputKeydown"
+                        t-att-disabled="state.isLoading"
+                    />
+                    <button
+                        class="btn btn-primary btn-lg"
+                        t-on-click="sendMessage"
+                        t-att-disabled="state.isLoading or !state.inputValue.trim()"
+                    >
+                        <t t-if="state.isLoading">
+                            <i class="fa fa-spinner fa-spin"></i>
+                        </t>
+                        <t t-else="">
+                            <i class="fa fa-paper-plane"></i>
+                        </t>
+                    </button>
+                </div>
+                <small class="text-muted mt-1 d-block">
+                    Nhấn nút Gửi để gửi câu hỏi. AI trả lời dựa trên dữ liệu ERP của bạn.
+                </small>
+            </div>
+        </div>
+    </t>
+
+    <!-- Modal Template (Alternative popup style) -->
+    <t t-name="quan_ly_van_ban.ChatbotModal" owl="1">
+        <div class="modal d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content" style="height: 80vh;">
+                    <!-- Header -->
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">
+                            <i class="fa fa-robot me-2"></i>
+                            AI Trợ Lý Nội Bộ
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" t-on-click="closeModal"></button>
+                    </div>
+                    
+                    <!-- Body -->
+                    <div class="modal-body p-0 d-flex flex-column" style="height: calc(80vh - 120px);">
+                        <!-- Messages -->
+                        <div class="flex-grow-1 overflow-auto p-3 bg-light" t-ref="chatMessages">
+                            <t t-if="state.messages.length === 0">
+                                <div class="text-center py-4">
+                                    <i class="fa fa-comments fa-3x text-muted mb-3"></i>
+                                    <h5>Xin chào! Tôi là AI trợ lý nội bộ</h5>
+                                    <p class="text-muted">Thử hỏi:</p>
+                                    <t t-foreach="suggestions" t-as="suggestion" t-key="suggestion">
+                                        <button class="btn btn-outline-primary btn-sm m-1" t-on-click="() => this.useSuggestion(suggestion)">
+                                            <t t-esc="suggestion"/>
+                                        </button>
+                                    </t>
+                                </div>
+                            </t>
+                            
+                            <t t-foreach="state.messages" t-as="message" t-key="message_index">
+                                <div t-attf-class="mb-3 d-flex {{ message.type === 'user' ? 'justify-content-end' : 'justify-content-start' }}">
+                                    <div t-attf-class="p-3 rounded-3 {{ message.type === 'user' ? 'bg-primary text-white' : message.type === 'error' ? 'bg-danger text-white' : 'bg-white border' }}" style="max-width: 80%;">
+                                        <div class="d-flex o_message_meta">
+                                            <t t-if="message.type === 'user'">
+                                                <span class="o_avatar_circle"><i class="fa fa-user"></i></span>
+                                                <small class="fw-bold">Bạn</small>
+                                            </t>
+                                            <t t-elif="message.type === 'error'">
+                                                <span class="o_avatar_circle"><i class="fa fa-exclamation-triangle"></i></span>
+                                                <small class="fw-bold">Lỗi</small>
+                                            </t>
+                                            <t t-else="">
+                                                <img t-att-src="'/quan_ly_van_ban/static/src/css/tro-ly-AI.jpg'" class="o_avatar_img" alt="AI"/>
+                                                <small class="fw-bold text-primary">AI</small>
+                                            </t>
+                                            <small class="o_message_time" t-esc="message.time"/>
+                                        </div>
+                                        <div style="white-space: pre-wrap;" t-esc="message.content"/>
+                                    </div>
+                                </div>
+                            </t>
+                            
+                            <t t-if="state.isLoading">
+                                <div class="d-flex justify-content-start mb-3">
+                                    <div class="p-3 rounded-3 bg-white border">
+                                        <i class="fa fa-spinner fa-spin me-2"></i>Đang xử lý...
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                    
+                    <!-- Footer / Input -->
+                    <div class="modal-footer p-2">
+                        <div class="o_chatbot_model_select d-flex flex-wrap align-items-center gap-2 mb-2 w-100">
+                            <small class="text-muted fw-semibold">Mô hình AI:</small>
+                            <select
+                                class="form-select form-select-sm w-auto"
+                                t-on-change="onModelChange"
+                                t-model="state.selectedModel"
+                                t-att-disabled="state.isLoading"
+                            >
+                                <t t-foreach="modelOptions" t-as="option" t-key="option.id">
+                                    <option t-att-value="option.id" t-esc="option.label"/>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="input-group w-100">
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Nhập câu hỏi..."
+                                t-ref="chatInput"
+                                t-model="state.inputValue"
+                                t-on-keydown="onInputKeydown"
+                                t-att-disabled="state.isLoading"
+                            />
+                            <button class="btn btn-primary" t-on-click="sendMessage" t-att-disabled="state.isLoading">
+                                <i t-attf-class="fa {{ state.isLoading ? 'fa-spinner fa-spin' : 'fa-paper-plane' }}"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

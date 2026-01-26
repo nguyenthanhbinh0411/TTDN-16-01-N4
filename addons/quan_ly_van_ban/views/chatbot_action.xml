@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Client Action to open Chatbot Dialog -->
+        <record id="action_chatbot_client" model="ir.actions.client">
+            <field name="name">AI Trợ Lý Nội Bộ</field>
+            <field name="tag">open_chatbot_dialog</field>
+        </record>
+    </data>
+</odoo>

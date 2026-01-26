@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Menu chính -->
+    <!-- Menu dưới QLNS của module nhan_su -->
     <menuitem id="menu_cham_cong_root" 
-              name="Chấm Công"
-              sequence="30"/>
+              name="Chấm công"
+              parent="nhan_su.menu_root"
+              sequence="50"/>
 
-    <!-- Menu con -->
     <menuitem id="menu_cham_cong" 
               name="Chấm công"
               parent="menu_cham_cong_root"

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Dashboard Action -->
+        <record id="action_van_ban_dashboard" model="ir.actions.act_window">
+            <field name="name">Dashboard Văn bản</field>
+            <field name="res_model">van.ban.dashboard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_van_ban_dashboard"/>
+            <field name="target">current</field> 
+        </record>
+
+        <!-- Dashboard View -->
+        <record id="view_van_ban_dashboard" model="ir.ui.view">
+            <field name="name">van.ban.dashboard</field>
+            <field name="model">van.ban.dashboard</field>
+            <field name="arch" type="xml">
+                <form string="Dashboard Văn bản" create="false" edit="false">
+                    <header>
+                        <button name="action_refresh" string="Làm mới" type="object" class="btn-primary" icon="fa-refresh"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <i class="fa fa-dashboard"/> Dashboard Quản lý Văn bản
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group string="Thống kê văn bản tháng này">
+                                <field name="van_ban_den_thang" widget="statinfo" string="Văn bản đến"/>
+                                <field name="van_ban_di_thang" widget="statinfo" string="Văn bản đi"/>
+                                <field name="van_ban_qua_han" widget="statinfo" string="Quá hạn"/>
+                                <field name="cho_duyet_count" widget="statinfo" string="Chờ duyệt"/>
+                            </group>
+                            <group string="Chỉ số hiệu suất">
+                                <field name="ty_le_qua_han" widget="percentage"/>
+                                <field name="thoi_gian_xu_ly_tb" string="Thời gian xử lý TB (ngày)"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Tổng quan" name="overview">
+                                <group>
+                                    <group string="KPI Cards">
+                                        <div class="row" style="margin: 15px 0;">
+                                            <div class="col-md-3" style="padding: 8px;">
+                                                <div style="background: white; border: 2px solid #7267A5; border-radius: 8px; padding: 16px; min-height: 120px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); display: flex; flex-direction: column; justify-content: space-between;">
+                                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                                        <span style="font-size: 14px; font-weight: 500; color: #555;">Văn bản đến</span>
+                                                        <i class="fa fa-inbox" style="font-size: 22px; color: #7267A5; opacity: 0.6;" title="Văn bản đến"/>
+                                                    </div>
+                                                    <div style="margin: 8px 0;">
+                                                        <div style="font-size: 32px; font-weight: 700; color: #111; line-height: 1.2;"><field name="van_ban_den_thang" readonly="1"/></div>
+                                                    </div>
+                                                    <div style="font-size: 12px; color: #888;">Tháng này</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3" style="padding: 8px;">
+                                                <div style="background: white; border: 2px solid #4CAF50; border-radius: 8px; padding: 16px; min-height: 120px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); display: flex; flex-direction: column; justify-content: space-between;">
+                                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                                        <span style="font-size: 14px; font-weight: 500; color: #555;">Văn bản đi</span>
+                                                        <i class="fa fa-paper-plane" style="font-size: 22px; color: #4CAF50; opacity: 0.6;" title="Văn bản đi"/>
+                                                    </div>
+                                                    <div style="margin: 8px 0;">
+                                                        <div style="font-size: 32px; font-weight: 700; color: #111; line-height: 1.2;"><field name="van_ban_di_thang" readonly="1"/></div>
+                                                    </div>
+                                                    <div style="font-size: 12px; color: #888;">Tháng này</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3" style="padding: 8px;">
+                                                <div style="background: white; border: 2px solid #F44336; border-radius: 8px; padding: 16px; min-height: 120px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); display: flex; flex-direction: column; justify-content: space-between;">
+                                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                                        <span style="font-size: 14px; font-weight: 500; color: #555;">Quá hạn</span>
+                                                        <i class="fa fa-exclamation-triangle" style="font-size: 22px; color: #F44336; opacity: 0.6;" title="Quá hạn"/>
+                                                    </div>
+                                                    <div style="margin: 8px 0;">
+                                                        <div style="font-size: 32px; font-weight: 700; color: #111; line-height: 1.2;"><field name="van_ban_qua_han" readonly="1"/></div>
+                                                    </div>
+                                                    <div style="font-size: 12px; color: #888;">Cần xử lý ngay</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3" style="padding: 8px;">
+                                                <div style="background: white; border: 2px solid #FF9800; border-radius: 8px; padding: 16px; min-height: 120px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); display: flex; flex-direction: column; justify-content: space-between;">
+                                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                                        <span style="font-size: 14px; font-weight: 500; color: #555;">Chờ duyệt</span>
+                                                        <i class="fa fa-clock-o" style="font-size: 22px; color: #FF9800; opacity: 0.6;" title="Chờ duyệt"/>
+                                                    </div>
+                                                    <div style="margin: 8px 0;">
+                                                        <div style="font-size: 32px; font-weight: 700; color: #111; line-height: 1.2;"><field name="cho_duyet_count" readonly="1"/></div>
+                                                    </div>
+                                                    <div style="font-size: 12px; color: #888;">Hợp đồng &amp; Báo giá</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Hành động nhanh" name="quick_actions">
+                                <group>
+                                    <button name="%(action_van_ban_den)d" string="Tạo văn bản đến" type="action" class="btn-primary" icon="fa-inbox"/>
+                                    <button name="%(action_van_ban_di)d" string="Tạo văn bản đi" type="action" class="btn-success" icon="fa-paper-plane"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

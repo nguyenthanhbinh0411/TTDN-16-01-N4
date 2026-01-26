@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- LUỒNG DUYỆT -->
+        <!-- Tree View -->
+        <record id="view_luong_duyet_tree" model="ir.ui.view">
+            <field name="name">luong.duyet.tree</field>
+            <field name="model">luong.duyet</field>
+            <field name="arch" type="xml">
+                <tree decoration-muted="active == False">
+                    <field name="sequence" widget="handle"/>
+                    <field name="ma_luong"/>
+                    <field name="name"/>
+                    <field name="loai_van_ban"/>
+                    <field name="dieu_kien_gia_tri_min" widget="monetary"/>
+                    <field name="dieu_kien_gia_tri_max" widget="monetary"/>
+                    <field name="so_lan_su_dung"/>
+                    <field name="active" widget="boolean"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_luong_duyet_form" model="ir.ui.view">
+            <field name="name">luong.duyet.form</field>
+            <field name="model">luong.duyet</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" icon="fa-check-circle">
+                                <field name="so_lan_su_dung" widget="statinfo" string="Đã sử dụng"/>
+                            </button>
+                            <button class="oe_stat_button" icon="fa-clock-o">
+                                <field name="so_van_ban_dang_cho" widget="statinfo" string="Chờ duyệt"/>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Lưu trữ" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Tên luồng duyệt..."/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="ma_luong"/>
+                                <field name="loai_van_ban"/>
+                                <field name="sequence"/>
+                                <field name="active" widget="boolean"/>
+                            </group>
+                            <group>
+                                <label for="dieu_kien_gia_tri_min" string="Điều kiện giá trị"/>
+                                <div class="o_row">
+                                    <field name="dieu_kien_gia_tri_min" widget="monetary" class="oe_inline"/>
+                                    <span> đến </span>
+                                    <field name="dieu_kien_gia_tri_max" widget="monetary" class="oe_inline"/>
+                                </div>
+                                <field name="thoi_gian_xu_ly_du_kien"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="mo_ta" placeholder="Mô tả luồng duyệt..."/>
+                        </group>
+                        <notebook>
+                            <page string="Các bước duyệt">
+                                <field name="buoc_duyet_ids">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="loai_nguoi_duyet"/>
+                                        <field name="chuc_vu" attrs="{'invisible': [('loai_nguoi_duyet', '!=', 'chuc_vu')]}"/>
+                                        <!-- <field name="phong_ban_id" attrs="{'invisible': [('loai_nguoi_duyet', '!=', 'phong_ban')]}"/> -->
+                                        <field name="nguoi_duyet_ids" widget="many2many_tags" attrs="{'invisible': [('loai_nguoi_duyet', '!=', 'nguoi_cu_the')]}"/>
+                                        <field name="bat_buoc" widget="boolean"/>
+                                        <field name="cho_phep_tu_choi" widget="boolean"/>
+                                        <field name="thoi_gian_xu_ly"/>
+                                        <field name="hanh_dong_sau_duyet"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_luong_duyet_search" model="ir.ui.view">
+            <field name="name">luong.duyet.search</field>
+            <field name="model">luong.duyet</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="ma_luong"/>
+                    <field name="loai_van_ban"/>
+                    <filter string="Đang hoạt động" name="active" domain="[('active', '=', True)]"/>
+                    <filter string="Đã lưu trữ" name="archived" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Loại văn bản" name="group_type" context="{'group_by': 'loai_van_ban'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_luong_duyet" model="ir.actions.act_window">
+            <field name="name">Luồng duyệt</field>
+            <field name="res_model">luong.duyet</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_luong_duyet_search"/>
+        </record>
+
+        <!-- LỊCH SỬ DUYỆT -->
+        <!-- Tree View -->
+        <record id="view_lich_su_duyet_tree" model="ir.ui.view">
+            <field name="name">lich.su.duyet.tree</field>
+            <field name="model">lich.su.duyet</field>
+            <field name="arch" type="xml">
+                <tree decoration-success="trang_thai == 'approved'" decoration-danger="trang_thai == 'rejected'">
+                    <field name="name"/>
+                    <field name="van_ban_type"/>
+                    <field name="nguoi_duyet_id"/>
+                    <field name="hanh_dong"/>
+                    <field name="trang_thai" widget="badge"/>
+                    <field name="ngay_duyet"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_lich_su_duyet_form" model="ir.ui.view">
+            <field name="name">lich.su.duyet.form</field>
+            <field name="model">lich.su.duyet</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="trang_thai" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="van_ban_type" readonly="1"/>
+                                <field name="van_ban_id" readonly="1"/>
+                                <field name="luong_duyet_id" readonly="1"/>
+                                <field name="buoc_duyet_id" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="nguoi_duyet_id" readonly="1"/>
+                                <field name="ngay_duyet" readonly="1"/>
+                                <field name="hanh_dong" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="y_kien" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="file_dinh_kem" filename="file_name" readonly="1"/>
+                            <field name="file_name" invisible="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_lich_su_duyet_search" model="ir.ui.view">
+            <field name="name">lich.su.duyet.search</field>
+            <field name="model">lich.su.duyet</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="van_ban_type"/>
+                    <field name="nguoi_duyet_id"/>
+                    <filter string="Đã duyệt" name="approved" domain="[('trang_thai', '=', 'approved')]"/>
+                    <filter string="Từ chối" name="rejected" domain="[('trang_thai', '=', 'rejected')]"/>
+                    <filter string="Chờ xử lý" name="pending" domain="[('trang_thai', '=', 'pending')]"/>
+                    <separator/>
+                    <filter string="Hôm nay" name="today" domain="[('ngay_duyet', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Loại văn bản" name="group_type" context="{'group_by': 'van_ban_type'}"/>
+                        <filter string="Người duyệt" name="group_user" context="{'group_by': 'nguoi_duyet_id'}"/>
+                        <filter string="Trạng thái" name="group_status" context="{'group_by': 'trang_thai'}"/>
+                        <filter string="Ngày" name="group_date" context="{'group_by': 'ngay_duyet:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_lich_su_duyet" model="ir.actions.act_window">
+            <field name="name">Lịch sử duyệt</field>
+            <field name="res_model">lich.su.duyet</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_lich_su_duyet_search"/>
+        </record>
+    </data>
+</odoo>

@@ -23,6 +23,9 @@
                 <field name="thoi_gian_check_in"/>
                 <field name="thoi_gian_check_out"/>
                 <field name="gio_lam_viec"/>
+                <field name="luong_co_ban"/>
+                <field name="so_ngay_cham_cong"/>
+                <field name="luong_thuc_te"/>
             </tree>
         </field>
     </record>

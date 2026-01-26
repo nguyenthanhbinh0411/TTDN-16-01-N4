@@ -1,6 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <record id="view_nhan_vien_kanban" model="ir.ui.view">
+            <field name="name">nhan_vien.kanban</field>
+            <field name="model">nhan_vien</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="don_vi_hien_tai" class="nhan_vien_kanban_rows">
+                    <field name="id"/>
+                    <field name="ho_va_ten"/>
+                    <field name="anh"/>
+                    <field name="email"/>
+                    <field name="tuoi"/>
+                    <field name="que_quan"/>
+                    <field name="don_vi_hien_tai"/>
+                    <field name="chuc_vu_hien_tai"/>
+                    <field name="chuc_vu_cap_do"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="employee-card oe_kanban_global_click" t-att-data-role="record.chuc_vu_hien_tai ? record.chuc_vu_hien_tai.raw_value : ''" t-att-data-level="record.chuc_vu_cap_do ? record.chuc_vu_cap_do.raw_value : (record.chuc_vu_cap_do || '')">
+                                <div class="text-center mb-3">
+                                     <img t-att-src="kanban_image('nhan_vien', 'anh', record.id.raw_value)" alt="Avatar" class="employee-avatar"/>
+                                </div>
+                                <div class="text-center mb-3">
+                                    <div class="employee-name mb-2"><field name="ho_va_ten"/></div>
+                                    <div t-if="record.chuc_vu_hien_tai" class="role-badge" t-att-data-role="record.chuc_vu_hien_tai ? record.chuc_vu_hien_tai.raw_value : ''" t-att-data-level="record.chuc_vu_cap_do ? record.chuc_vu_cap_do.raw_value : (record.chuc_vu_cap_do || '')">
+                                        <field name="chuc_vu_hien_tai"/>
+                                    </div>
+                                </div>
+                                <div class="employee-divider"></div>
+                                <div class="employee-details">
+                                    <div class="employee-info"><strong>Email:</strong> <field name="email"/></div>
+                                    <div class="employee-info"><strong>Quê quán:</strong> <field name="que_quan"/></div>
+                                </div>
+                                <div class="mt-3 text-center employee-actions">
+                                    <a class="btn btn-sm btn-light mr-1" type="open">Xem</a>
+                                    <a class="btn btn-sm btn-primary" type="edit">Sửa</a>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_nhan_vien_form" model="ir.ui.view">
             <field name="name">nhan_vien</field>
             <field name="model">nhan_vien</field>
@@ -48,6 +90,7 @@
                     <field name="so_nguoi_bang_tuoi"/>
                     <field name="que_quan"/>
                     <field name="email"/>
+                    <field name="don_vi_hien_tai"/>
                 </tree>
             </field>
         </record>
@@ -62,6 +105,9 @@
                     <field name="tuoi"/>
                     <field name="que_quan"/>
                     <field name="email"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Đơn vị hiện tại" name="group_by_don_vi_hien_tai" context="{'group_by': 'don_vi_hien_tai'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -69,8 +115,15 @@
         <record id="action_nhan_vien" model="ir.actions.act_window">
             <field name="name">Nhân viên</field>
             <field name="res_model">nhan_vien</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref = "nhan_vien_search"/>
+        </record>
+
+        <record id="action_luong" model="ir.actions.act_window">
+            <field name="name">Quản lý lương</field>
+            <field name="res_model">nhan_vien</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="nhan_vien_search"/>
         </record>
     </data>
 </odoo>

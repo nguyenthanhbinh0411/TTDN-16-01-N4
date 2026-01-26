@@ -1,0 +1,302 @@
+/* ============================================
+   LAYER 1: BACKGROUND - Makes UI look premium
+   ============================================ */
+.o_action_manager {
+  background: #f6f7fb !important;
+}
+
+/* ============================================
+   LAYER 2: DEPARTMENT SECTION CARDS
+   ============================================ */
+.nhan_vien_kanban_rows .o_kanban_group {
+  background: #ffffff !important;
+  border-radius: 16px !important;
+  padding: 20px 24px !important;
+  margin-top: 28px !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05) !important;
+  flex: 0 0 100% !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  border-bottom: none !important;
+}
+
+/* ============================================
+   LAYER 3: DEPARTMENT HEADER WITH INFO
+   ============================================ */
+.nhan_vien_kanban_rows .o_kanban_header {
+  background-color: transparent !important;
+  padding: 0 0 16px 0 !important;
+  border-bottom: 2px solid #e5e7eb !important;
+  margin-bottom: 20px !important;
+}
+
+.nhan_vien_kanban_rows .o_kanban_header_title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: #1f2937 !important;
+  display: flex;
+  align-items: center;
+}
+
+.nhan_vien_kanban_rows .o_kanban_counter {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: normal;
+  margin-left: 8px;
+}
+
+/* ============================================
+   LAYER 4: EMPLOYEE CARD WITH FOCUS
+   ============================================ */
+.employee-card {
+  width: 260px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid #f1f1f1;
+  border-left: 4px solid #e5e7eb;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.employee-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  z-index: 10;
+}
+
+/* ============================================
+   LAYER 5: VISUAL HIERARCHY BY ROLE
+   ============================================ */
+.employee-card[data-role*="Giám đốc"],
+.employee-card[data-role*="giám đốc"],
+.employee-card[data-role*="Giam doc"],
+.employee-card[data-role*="GĐ"] {
+  border-left: 5px solid #7c3aed;
+}
+
+.employee-card[data-role*="Trưởng phòng"],
+.employee-card[data-role*="truong phong"],
+.employee-card[data-role*="Truong phong"],
+.employee-card[data-role*="TP"] {
+  border-left: 5px solid #0ea5e9;
+}
+
+.employee-card[data-role*="Nhân viên"],
+.employee-card[data-role*="nhan vien"],
+.employee-card[data-role*="Nhan vien"] {
+  border-left: 5px solid #22c55e;
+}
+
+.employee-card[data-role*="Bảo vệ"],
+.employee-card[data-role*="bao ve"],
+.employee-card[data-role*="Bao ve"] {
+  border-left: 5px solid #f97316;
+}
+
+/* Employee Card Elements */
+.employee-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto;
+  display: block;
+  border: 3px solid #f3f4f6;
+}
+
+.employee-name {
+  font-weight: 600;
+  font-size: 17px;
+  color: #111827;
+  line-height: 1.3;
+}
+
+/* Role Badge Styles */
+.role-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.role-badge[data-role*="Giám đốc"],
+.role-badge[data-role*="giám đốc"],
+.role-badge[data-role*="Giam doc"],
+.role-badge[data-role*="GĐ"] {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.role-badge[data-role*="Trưởng phòng"],
+.role-badge[data-role*="truong phong"],
+.role-badge[data-role*="Truong phong"],
+.role-badge[data-role*="TP"] {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.role-badge[data-role*="Nhân viên"],
+.role-badge[data-role*="nhan vien"],
+.role-badge[data-role*="Nhan vien"] {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.role-badge[data-role*="Bảo vệ"],
+.role-badge[data-role*="bao ve"],
+.role-badge[data-role*="Bao ve"] {
+  background: #fed7aa;
+  color: #c2410c;
+}
+
+/* Color scale based on cap_do (lower = higher level).
+   We'll color by attribute `data-level` on the badge. */
+.role-badge[data-level="1"] {
+  background: #efe8ff;
+  color: #5b21b6;
+}
+.role-badge[data-level="2"] {
+  background: #e8f6ff;
+  color: #0369a1;
+}
+.role-badge[data-level="3"] {
+  background: #ecfdf5;
+  color: #15803d;
+}
+.role-badge[data-level="4"] {
+  background: #fff7ed;
+  color: #c2410c;
+}
+.role-badge[data-level="6"] {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+/* Level 6 (additional) */
+.role-badge[data-level="5"] {
+  background: #fff1f2;
+  color: #b91c1c;
+}
+
+/* Similarly for card left border color by level */
+.employee-card[data-level="1"] {
+  border-left-color: #7c3aed;
+}
+.employee-card[data-level="2"] {
+  border-left-color: #0ea5e9;
+}
+.employee-card[data-level="3"] {
+  border-left-color: #22c55e;
+}
+.employee-card[data-level="4"] {
+  border-left-color: #f97316;
+}
+.employee-card[data-level="6"] {
+  border-left-color: #9ca3af;
+}
+
+/* Level 6 (additional) */
+.employee-card[data-level="5"] {
+  border-left-color: #ef4444;
+}
+
+/* Level 7 (additional, lowest priority) */
+.role-badge[data-level="7"] {
+  background: #f8fafc;
+  color: #475569;
+}
+
+.employee-card[data-level="7"] {
+  border-left-color: #64748b;
+}
+
+.employee-divider {
+  border-top: 1px solid #f1f5f9;
+  margin: 12px 0;
+}
+
+.employee-details {
+  margin-bottom: 12px;
+}
+
+.employee-info {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+.employee-info strong {
+  color: #374151;
+  font-weight: 500;
+  margin-right: 4px;
+}
+
+.employee-actions .btn {
+  font-size: 12px;
+  padding: 6px 14px;
+  font-weight: 500;
+}
+
+.employee-actions .btn-light {
+  border: 1px solid #e5e7eb;
+  color: #374151;
+}
+
+.employee-actions .btn-light:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+/* Override the Kanban container to be a column layout */
+.o_kanban_view.nhan_vien_kanban_rows {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+}
+
+/* Dept-level filter button styles injected by JS */
+.dept-level-filters .btn {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+}
+.dept-level-filters .btn:hover {
+  background: #f8fafc;
+}
+
+/* filtering behaviour: hide all records then show only matching level */
+.o_kanban_group[class*="filter-level-"] .o_kanban_record {
+  display: none !important;
+}
+.o_kanban_group.filter-level-4 .o_kanban_record[data-level="4"] {
+  display: inline-block !important;
+}
+.o_kanban_group.filter-level-5 .o_kanban_record[data-level="5"] {
+  display: inline-block !important;
+}
+.o_kanban_group.filter-level-6 .o_kanban_record[data-level="6"] {
+  display: inline-block !important;
+}
+.o_kanban_group.filter-level-7 .o_kanban_record[data-level="7"] {
+  display: inline-block !important;
+}
+
+/* The card container within the group */
+.nhan_vien_kanban_rows .o_kanban_group .o_kanban_record {
+  width: 260px !important;
+  display: inline-block !important;
+  vertical-align: top;
+  margin: 0 16px 16px 0 !important;
+}
+
+/* Hide the ghost div usually present in kanban */
+.nhan_vien_kanban_rows .o_kanban_ghost {
+  display: none !important;
+}

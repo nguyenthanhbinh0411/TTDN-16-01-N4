@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_chu_ky_dien_tu_tree" model="ir.ui.view">
+            <field name="name">chu.ky.dien.tu.tree</field>
+            <field name="model">chu.ky.dien.tu</field>
+            <field name="arch" type="xml">
+                <tree decoration-success="trang_thai == 'verified'" decoration-warning="trang_thai == 'signed'" decoration-danger="trang_thai == 'invalid'">
+                    <field name="name"/>
+                    <field name="van_ban_type"/>
+                    <field name="nguoi_ky"/>
+                    <field name="ngay_ky"/>
+                    <field name="is_verified" widget="boolean"/>
+                    <field name="trang_thai" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_chu_ky_dien_tu_form" model="ir.ui.view">
+            <field name="name">chu.ky.dien.tu.form</field>
+            <field name="model">chu.ky.dien.tu</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_sign" string="Ký văn bản" type="object" class="btn-primary" attrs="{'invisible': [('trang_thai', '!=', 'draft')]}"/>
+                        <button name="action_verify" string="Xác thực" type="object" class="btn-success" attrs="{'invisible': [('trang_thai', '!=', 'signed')]}"/>
+                        <button name="action_revoke" string="Thu hồi" type="object" class="btn-danger" attrs="{'invisible': [('trang_thai', 'in', ['draft', 'revoked'])]}"/>
+                        <field name="trang_thai" widget="statusbar" statusbar_visible="draft,signed,verified"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Thông tin văn bản">
+                                <field name="van_ban_type"/>
+                                <field name="van_ban_id"/>
+                                <field name="van_ban_ref"/>
+                            </group>
+                            <group string="Thông tin người ký">
+                                <field name="nguoi_ky"/>
+                                <field name="chuc_vu_ky"/>
+                                <field name="ngay_ky"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Chữ ký">
+                                <field name="chu_ky_image" widget="image" filename="chu_ky_image_name"/>
+                                <field name="chu_ky_image_name" invisible="1"/>
+                            </group>
+                            <group string="Xác thực">
+                                <field name="document_hash" placeholder="Nhập/kiểm tra SHA-256"/>
+                                <field name="signature_hash" placeholder="Nhập chữ ký hash"/>
+                                <field name="is_verified" widget="boolean" readonly="1"/>
+                                <field name="verification_date" readonly="1" attrs="{'invisible': [('is_verified', '=', False)]}"/>
+                            </group>
+                        </group>
+                        <group string="Certificate Information">
+                            <group>
+                                <field name="certificate_serial" readonly="1"/>
+                                <field name="certificate_issuer" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="certificate_valid_from" readonly="1"/>
+                                <field name="certificate_valid_to" readonly="1"/>
+                            </group>
+                        </group>
+                        <group attrs="{'invisible': [('trang_thai', '!=', 'revoked')]}">
+                            <field name="ly_do_thu_hoi"/>
+                            <field name="ngay_thu_hoi" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="ghi_chu"/>
+                        </group>
+                        <group string="Metadata" groups="base.group_no_one">
+                            <field name="ip_address" readonly="1"/>
+                            <field name="location" readonly="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="view_chu_ky_dien_tu_kanban" model="ir.ui.view">
+            <field name="name">chu.ky.dien.tu.kanban</field>
+            <field name="model">chu.ky.dien.tu</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="nguoi_ky"/>
+                    <field name="ngay_ky"/>
+                    <field name="trang_thai"/>
+                    <field name="is_verified"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card">
+                                <div class="oe_kanban_content">
+                                    <div>
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div>
+                                        <i class="fa fa-user" title="Người ký"/> <field name="nguoi_ky"/>
+                                    </div>
+                                    <div>
+                                        <i class="fa fa-calendar" title="Ngày ký"/> <field name="ngay_ky"/>
+                                    </div>
+                                    <div>
+                                        <field name="trang_thai" widget="badge"/>
+                                        <t t-if="record.is_verified.raw_value">
+                                            <span class="badge badge-success">Đã xác thực</span>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_chu_ky_dien_tu_search" model="ir.ui.view">
+            <field name="name">chu.ky.dien.tu.search</field>
+            <field name="model">chu.ky.dien.tu</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="nguoi_ky"/>
+                    <filter string="Đã xác thực" name="verified" domain="[('is_verified', '=', True)]"/>
+                    <filter string="Chưa xác thực" name="not_verified" domain="[('is_verified', '=', False)]"/>
+                    <filter string="Hiệu lực" name="valid" domain="[('certificate_valid_to', '&gt;=', context_today())]"/>
+                    <separator/>
+                    <filter string="Hôm nay" name="today" domain="[('ngay_ky', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Loại văn bản" name="group_type" context="{'group_by': 'van_ban_type'}"/>
+                        <filter string="Người ký" name="group_user" context="{'group_by': 'nguoi_ky'}"/>
+                        <filter string="Trạng thái" name="group_status" context="{'group_by': 'trang_thai'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_chu_ky_dien_tu" model="ir.actions.act_window">
+            <field name="name">Chữ ký điện tử</field>
+            <field name="res_model">chu.ky.dien.tu</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_chu_ky_dien_tu_search"/>
+        </record>
+
+        <!-- Sequence -->
+        <record id="seq_chu_ky_dien_tu" model="ir.sequence">
+            <field name="name">Chữ ký điện tử</field>
+            <field name="code">chu.ky.dien.tu</field>
+            <field name="prefix">CK</field>
+            <field name="padding">5</field>
+        </record>
+    </data>
+</odoo>

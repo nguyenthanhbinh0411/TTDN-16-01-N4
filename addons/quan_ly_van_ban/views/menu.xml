@@ -7,6 +7,13 @@
             web_icon="quan_ly_van_ban,static/description/icon.png"
             sequence="26"/>
         
+        <!-- Dashboard -->
+        <menuitem id="menu_dashboard"
+            name="Dashboard"
+            parent="menu_qlvb_root"
+            action="action_van_ban_dashboard"
+            sequence="1"/>
+        
         <!-- Sub Menu: Văn bản cơ bản -->
         <menuitem id="menu_van_ban_co_ban"
             name="Văn bản cơ bản"
@@ -25,26 +32,50 @@
             action="action_van_ban_di"
             sequence="2"/>
         
+        <!-- Sub Menu: Phê duyệt -->
+        <menuitem id="menu_phe_duyet"
+            name="Phê duyệt"
+            parent="menu_qlvb_root"
+            sequence="8"/>
+        
+        <menuitem id="menu_duyet_van_ban_den"
+            name="Duyệt văn bản đến"
+            parent="menu_phe_duyet"
+            action="action_approval_van_ban_den"
+            sequence="1"/>
+        
+        <menuitem id="menu_duyet_van_ban_di"
+            name="Duyệt văn bản đi"
+            parent="menu_phe_duyet"
+            action="action_approval_van_ban_di_clean"
+            sequence="2"/>
+        
+        <!-- Sub Menu: Quản lý kinh doanh -->
+        <menuitem id="menu_quan_ly_kinh_doanh"
+            name="Tài liệu kinh doanh"
+            parent="menu_qlvb_root"
+            sequence="10"/>
+        
         <!-- Sub Menu: Hợp đồng -->
         <menuitem id="menu_hop_dong"
             name="Hợp đồng"
-            parent="menu_qlvb_root"
+            parent="menu_quan_ly_kinh_doanh"
             action="action_hop_dong"
-            sequence="10"/>
+            sequence="1"/>
         
         <!-- Sub Menu: Báo giá -->
         <menuitem id="menu_bao_gia"
             name="Báo giá"
-            parent="menu_qlvb_root"
+            parent="menu_quan_ly_kinh_doanh"
             action="action_bao_gia"
-            sequence="20"/>
+            sequence="2"/>
         
         <!-- Sub Menu: Tài liệu số hóa -->
         <menuitem id="menu_tai_lieu"
             name="Tài liệu số hóa"
-            parent="menu_qlvb_root"
+            parent="menu_quan_ly_kinh_doanh"
             action="action_tai_lieu"
-            sequence="30"/>
+            sequence="3"/>
         
         <!-- Sub Menu: Danh mục -->
         <menuitem id="menu_danh_muc"
@@ -57,5 +88,36 @@
             parent="menu_danh_muc"
             action="action_loai_van_ban"
             sequence="1"/>
+        
+        <!-- Quản trị nâng cao -->
+        <menuitem id="menu_quan_tri"
+            name="Quản trị"
+            parent="menu_qlvb_root"
+            sequence="150"/>
+        
+        <menuitem id="menu_mau_van_ban"
+            name="Mẫu văn bản"
+            parent="menu_quan_tri"
+            action="action_mau_van_ban"
+            sequence="1"/>
+        
+        <menuitem id="menu_luong_duyet"
+            name="Luồng duyệt"
+            parent="menu_quan_tri"
+            action="action_luong_duyet"
+            sequence="2"/>
+        
+        <menuitem id="menu_chu_ky_dien_tu"
+            name="Chữ ký điện tử"
+            parent="menu_quan_tri"
+            action="action_chu_ky_dien_tu"
+            sequence="3"/>
+        
+        <!-- AI Chatbot Menu -->
+        <menuitem id="menu_chatbot"
+            name="AI Trợ Lý"
+            parent="menu_qlvb_root"
+            action="action_chatbot_client"
+            sequence="200"/>
     </data>
 </odoo>

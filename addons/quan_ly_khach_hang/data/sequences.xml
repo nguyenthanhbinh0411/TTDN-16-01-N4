@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequence cho Cơ hội bán hàng -->
+        <record id="seq_co_hoi_ban_hang" model="ir.sequence">
+            <field name="name">Cơ hội bán hàng</field>
+            <field name="code">co_hoi_ban_hang</field>
+            <field name="prefix">COH</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Sequence cho Đơn hàng -->
+        <record id="seq_don_hang" model="ir.sequence">
+            <field name="name">Đơn hàng</field>
+            <field name="code">don_hang</field>
+            <field name="prefix">DH</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Sequence cho Giao hàng -->
+        <record id="seq_giao_hang" model="ir.sequence">
+            <field name="name">Giao hàng</field>
+            <field name="code">giao_hang</field>
+            <field name="prefix">GH</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Sequence cho Hóa đơn -->
+        <record id="seq_hoa_don" model="ir.sequence">
+            <field name="name">Hóa đơn</field>
+            <field name="code">hoa_don</field>
+            <field name="prefix">HD</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Sequence cho Thanh toán -->
+        <record id="seq_thanh_toan" model="ir.sequence">
+            <field name="name">Thanh toán</field>
+            <field name="code">thanh_toan</field>
+            <field name="prefix">TT</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Sequence cho Khiếu nại -->
+        <record id="seq_khieu_nai_phan_hoi" model="ir.sequence">
+            <field name="name">Khiếu nại phản hồi</field>
+            <field name="code">khieu_nai_phan_hoi</field>
+            <field name="prefix">KN</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+        </record>
+    </data>
+</odoo>

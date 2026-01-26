@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_yeu_cau_kh_tree" model="ir.ui.view">
+            <field name="name">yeu_cau_khach_hang.tree</field>
+            <field name="model">yeu_cau_khach_hang</field>
+            <field name="arch" type="xml">
+                <tree string="Yêu cầu / Khiếu nại">
+                    <field name="name"/>
+                    <field name="loai"/>
+                    <field name="khach_hang_id"/>
+                    <field name="nhan_vien_phu_trach_id"/>
+                    <field name="don_vi_id"/>
+                    <field name="han_xu_ly"/>
+                    <field name="trang_thai"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_yeu_cau_kh_form" model="ir.ui.view">
+            <field name="name">yeu_cau_khach_hang.form</field>
+            <field name="model">yeu_cau_khach_hang</field>
+            <field name="arch" type="xml">
+                <form string="Yêu cầu / Khiếu nại">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="loai"/>
+                                <field name="khach_hang_id"/>
+                                <field name="nhan_vien_phu_trach_id"/>
+                                <field name="don_vi_id"/>
+                            </group>
+                            <group>
+                                <field name="trang_thai"/>
+                                <field name="han_xu_ly"/>
+                                <field name="van_ban_den_id" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="noi_dung" placeholder="Mô tả yêu cầu/khiếu nại" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_yeu_cau_kh_search" model="ir.ui.view">
+            <field name="name">yeu_cau_khach_hang.search</field>
+            <field name="model">yeu_cau_khach_hang</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm yêu cầu/khiếu nại">
+                    <field name="name"/>
+                    <field name="khach_hang_id"/>
+                    <field name="nhan_vien_phu_trach_id"/>
+                    <field name="don_vi_id"/>
+                    <filter string="Yêu cầu" name="flt_yc" domain="[('loai','=','yeu_cau')]"/>
+                    <filter string="Khiếu nại" name="flt_kn" domain="[('loai','=','khieu_nai')]"/>
+                    <group expand="0" string="Nhóm theo">
+                        <filter string="Khách hàng" name="grp_kh" context="{'group_by':'khach_hang_id'}"/>
+                        <filter string="Nhân viên" name="grp_nv" context="{'group_by':'nhan_vien_phu_trach_id'}"/>
+                        <filter string="Trạng thái" name="grp_tt" context="{'group_by':'trang_thai'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_yeu_cau_kh" model="ir.actions.act_window">
+            <field name="name">Yêu cầu / Khiếu nại</field>
+            <field name="res_model">yeu_cau_khach_hang</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_yeu_cau_kh_search"/>
+        </record>
+
+        <menuitem id="menu_yeu_cau_kh" name="Yêu cầu / Khiếu nại" parent="menu_qlkh_root" action="action_yeu_cau_kh" sequence="50"/>
+    </data>
+</odoo>

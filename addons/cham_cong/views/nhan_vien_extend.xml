@@ -15,6 +15,17 @@
                     </button>
                 </div>
             </sheet>
+            <xpath expr="//notebook" position="inside">
+                <page string="Lương và Chấm công">
+                    <group>
+                        <field name="luong_co_ban"/>
+                        <field name="tong_gio_lam_viec"/>
+                        <field name="luong_thuc_te"/>
+                        <field name="so_ngay_cham_cong"/>
+                    </group>
+                    <field name="cham_cong_ids"/>
+                </page>
+            </xpath>
         </field>
     </record>
 </odoo>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View -->
+        <record id="view_lich_su_tuong_tac_form" model="ir.ui.view">
+            <field name="name">lich_su_tuong_tac.form</field>
+            <field name="model">lich_su_tuong_tac</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="tieu_de"/>
+                                <field name="khach_hang_id"/>
+                                <field name="nhan_vien_phu_trach_id"/>
+                            </group>
+                            <group>
+                                <field name="loai_tuong_tac"/>
+                                <field name="ngay_tuong_tac"/>
+                                <field name="thoi_luong"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Nội dung">
+                                <field name="noi_dung" placeholder="Nội dung cuộc tương tác..."/>
+                            </page>
+                            <page string="Kết quả">
+                                <field name="ket_qua" placeholder="Kết quả đạt được..."/>
+                            </page>
+                            <page string="File ghi âm" attrs="{'invisible': [('loai_tuong_tac', '!=', 'cuoc_goi')]}">
+                                <group>
+                                    <field name="file_ghi_am" filename="file_ghi_am_name"/>
+                                    <field name="file_ghi_am_name" invisible="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                        <field name="ghi_chu" placeholder="Ghi chú..."/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="view_lich_su_tuong_tac_tree" model="ir.ui.view">
+            <field name="name">lich_su_tuong_tac.tree</field>
+            <field name="model">lich_su_tuong_tac</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="ngay_tuong_tac"/>
+                    <field name="tieu_de"/>
+                    <field name="khach_hang_id"/>
+                    <field name="loai_tuong_tac"/>
+                    <field name="nhan_vien_phu_trach_id"/>
+                    <field name="thoi_luong"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Calendar View -->
+        <record id="view_lich_su_tuong_tac_calendar" model="ir.ui.view">
+            <field name="name">lich_su_tuong_tac.calendar</field>
+            <field name="model">lich_su_tuong_tac</field>
+            <field name="arch" type="xml">
+                <calendar date_start="ngay_tuong_tac" string="Lịch sử tương tác" mode="month" color="loai_tuong_tac">
+                    <field name="tieu_de"/>
+                    <field name="khach_hang_id"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_lich_su_tuong_tac_search" model="ir.ui.view">
+            <field name="name">lich_su_tuong_tac.search</field>
+            <field name="model">lich_su_tuong_tac</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="tieu_de"/>
+                    <field name="khach_hang_id"/>
+                    <field name="nhan_vien_phu_trach_id"/>
+                    <filter string="Cuộc gọi" name="cuoc_goi" domain="[('loai_tuong_tac', '=', 'cuoc_goi')]"/>
+                    <filter string="Email" name="email" domain="[('loai_tuong_tac', '=', 'email')]"/>
+                    <filter string="Họp" name="hop" domain="[('loai_tuong_tac', '=', 'hop')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Khách hàng" name="group_khach_hang" context="{'group_by': 'khach_hang_id'}"/>
+                        <filter string="Loại tương tác" name="group_loai" context="{'group_by': 'loai_tuong_tac'}"/>
+                        <filter string="Ngày" name="group_ngay" context="{'group_by': 'ngay_tuong_tac'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_lich_su_tuong_tac" model="ir.actions.act_window">
+            <field name="name">Lịch sử tương tác</field>
+            <field name="res_model">lich_su_tuong_tac</field>
+            <field name="view_mode">tree,calendar,form</field>
+            <field name="search_view_id" ref="view_lich_su_tuong_tac_search"/>
+        </record>
+    </data>
+</odoo>

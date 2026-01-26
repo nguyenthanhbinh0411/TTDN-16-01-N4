@@ -11,6 +11,7 @@
                         <group col="4" string="Thông tin chung">
                             <field name="ma_don_vi"/>
                             <field name="ten_don_vi"/>
+                            <field name="cap_do"/>
                         </group>
                     </sheet>
                 </form>
@@ -24,6 +25,7 @@
                 <tree>
                     <field name="ma_don_vi"/>
                     <field name="ten_don_vi"/>
+                    <field name="cap_do"/>
                 </tree>
             </field>
         </record>

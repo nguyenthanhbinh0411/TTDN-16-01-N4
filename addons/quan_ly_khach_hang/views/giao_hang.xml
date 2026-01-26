@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Kanban View -->
+        <record id="view_giao_hang_kanban" model="ir.ui.view">
+            <field name="name">giao_hang.kanban</field>
+            <field name="model">giao_hang</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="trang_thai" class="o_kanban_small_column">
+                    <field name="ma_giao_hang"/>
+                    <field name="khach_hang_id"/>
+                    <field name="nguoi_nhan"/>
+                    <field name="dia_chi_giao_hang"/>
+                    <field name="ngay_giao_hang_du_kien"/>
+                    <field name="trang_thai"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_record_top mb-2">
+                                    <div>
+                                        <strong>
+                                            <i class="fa fa-truck" title="Giao hàng"/> <field name="ma_giao_hang"/>
+                                        </strong>
+                                    </div>
+                                    <div>
+                                        <span t-if="record.trang_thai.raw_value == 'da_giao'" class="badge badge-success">Đã giao</span>
+                                        <span t-elif="record.trang_thai.raw_value == 'dang_van_chuyen'" class="badge">Đang giao</span>
+                                        <span t-elif="record.trang_thai.raw_value == 'that_bai'" class="badge badge-danger">Thất bại</span>
+                                        <span t-else="" class="badge badge-secondary">Chuẩn bị</span>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div>
+                                        <div>KHÁCH HÀNG</div>
+                                        <div><field name="nguoi_nhan"/></div>
+                                        <div><field name="khach_hang_id"/></div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <i class="fa fa-map-marker" title="Vị trí"/>
+                                            <div>
+                                                <field name="dia_chi_giao_hang"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Map Placeholder -->
+                                    <div>
+                                        <div>
+                                            <i class="fa fa-map" title="Bản đồ"/>
+                                            <div>Map View</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom mt-3">
+                                    <div>
+                                        <i class="fa fa-clock-o" title="Thời gian"/>
+                                        <span>
+                                            Dự kiến: <field name="ngay_giao_hang_du_kien" widget="date"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_giao_hang_form" model="ir.ui.view">
+            <field name="name">giao_hang.form</field>
+            <field name="model">giao_hang</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_bat_dau_van_chuyen" string="Bắt đầu vận chuyển" type="object" class="btn-primary" attrs="{'invisible': [('trang_thai', '!=', 'chuan_bi')]}"/>
+                        <button name="action_xac_nhan_da_giao" string="Xác nhận đã giao" type="object" class="btn-success" attrs="{'invisible': [('trang_thai', '!=', 'dang_van_chuyen')]}"/>
+                        <button name="action_danh_dau_that_bai" string="Giao thất bại" type="object" class="btn-danger" attrs="{'invisible': [('trang_thai', '!=', 'dang_van_chuyen')]}"/>
+                        <field name="trang_thai" widget="statusbar" statusbar_visible="chuan_bi,dang_van_chuyen,da_giao"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <div>
+                                <i class="fa fa-truck" title="Phiếu giao hàng"/> PHIẾU GIAO HÀNG
+                            </div>
+                            <h1>
+                                <field name="ma_giao_hang" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Thông tin đơn hàng">
+                                <field name="don_hang_id"/>
+                                <field name="khach_hang_id"/>
+                            </group>
+                            <group string="Vận chuyển">
+                                <field name="don_vi_van_chuyen"/>
+                                <field name="ma_van_don"/>
+                                <field name="phi_van_chuyen" widget="monetary"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Địa chỉ &amp; Người nhận">
+                                <field name="dia_chi_giao_hang"/>
+                                <field name="nguoi_nhan"/>
+                                <field name="so_dien_thoai_nguoi_nhan"/>
+                            </group>
+                            <group string="Thời gian giao hàng">
+                                <field name="ngay_giao_hang_du_kien"/>
+                                <field name="gio_giao_hang"/>
+                                <field name="ngay_giao_hang_thuc_te" attrs="{'invisible': [('ngay_giao_hang_thuc_te', '=', False)]}"/>
+                            </group>
+                        </group>
+                        <group string="Xác nhận giao hàng" attrs="{'invisible': [('trang_thai', '!=', 'da_giao')]}">
+                            <group>
+                                <field name="nguoi_ky_nhan"/>
+                                <field name="ngay_ky_nhan"/>
+                            </group>
+                            <group>
+                                <field name="chu_ky_dien_tu" widget="image"/>
+                                <field name="anh_xac_nhan" widget="image"/>
+                            </group>
+                        </group>
+                        <group attrs="{'invisible': [('trang_thai', '!=', 'that_bai')]}">
+                            <field name="ly_do_that_bai" placeholder="Ghi rõ lý do giao thất bại..."/>
+                        </group>
+                        <field name="ghi_chu" placeholder="Ghi chú giao hàng..."/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="view_giao_hang_tree" model="ir.ui.view">
+            <field name="name">giao_hang.tree</field>
+            <field name="model">giao_hang</field>
+            <field name="arch" type="xml">
+                <tree decoration-warning="trang_thai == 'chuan_bi'" decoration-info="trang_thai == 'dang_van_chuyen'" decoration-success="trang_thai == 'da_giao'" decoration-danger="trang_thai == 'that_bai'">
+                    <field name="ma_giao_hang"/>
+                    <field name="don_hang_id"/>
+                    <field name="khach_hang_id"/>
+                    <field name="nguoi_nhan"/>
+                    <field name="ngay_giao_hang_du_kien"/>
+                    <field name="ngay_giao_hang_thuc_te"/>
+                    <field name="trang_thai" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_giao_hang_search" model="ir.ui.view">
+            <field name="name">giao_hang.search</field>
+            <field name="model">giao_hang</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="ma_giao_hang" string="Mã giao hàng" filter_domain="['|', ('ma_giao_hang', 'ilike', self), ('ma_van_don', 'ilike', self)]"/>
+                    <field name="don_hang_id"/>
+                    <field name="khach_hang_id"/>
+                    <field name="nguoi_nhan"/>
+                    <separator/>
+                    <filter string="Chuẩn bị" name="chuan_bi" domain="[('trang_thai', '=', 'chuan_bi')]"/>
+                    <filter string="Đang vận chuyển" name="dang_van_chuyen" domain="[('trang_thai', '=', 'dang_van_chuyen')]"/>
+                    <filter string="Đã giao" name="da_giao" domain="[('trang_thai', '=', 'da_giao')]"/>
+                    <filter string="Thất bại" name="that_bai" domain="[('trang_thai', '=', 'that_bai')]"/>
+                    <separator/>
+                    <filter string="Giao hôm nay" name="today" domain="[('ngay_giao_hang_du_kien', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Giao tuần này" name="this_week" domain="[('ngay_giao_hang_du_kien', '>=', (context_today() - relativedelta(days=context_today().weekday())).strftime('%Y-%m-%d')), ('ngay_giao_hang_du_kien', '&lt;=', (context_today() + relativedelta(days=6-context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Quá hạn" name="overdue" domain="[('ngay_giao_hang_du_kien', '&lt;', context_today().strftime('%Y-%m-%d')), ('trang_thai', 'not in', ['da_giao', 'that_bai'])]"/>
+                    <separator/>
+                    <filter string="Cần xác nhận" name="need_confirm" domain="[('trang_thai', '=', 'dang_van_chuyen'), ('ngay_giao_hang_du_kien', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Trạng thái" name="group_trang_thai" context="{'group_by': 'trang_thai'}"/>
+                        <filter string="Đơn vị vận chuyển" name="group_don_vi" context="{'group_by': 'don_vi_van_chuyen'}"/>
+                        <filter string="Ngày giao dự kiến" name="group_ngay" context="{'group_by': 'ngay_giao_hang_du_kien'}"/>
+                        <filter string="Khách hàng" name="group_khach_hang" context="{'group_by': 'khach_hang_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_giao_hang" model="ir.actions.act_window">
+            <field name="name">Giao hàng</field>
+            <field name="res_model">giao_hang</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_giao_hang_search"/>
+        </record>
+    </data>
+</odoo>

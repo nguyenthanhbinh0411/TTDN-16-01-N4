@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View -->
+        <record id="view_chuong_trinh_khach_hang_than_thiet_form" model="ir.ui.view">
+            <field name="name">chuong_trinh_khach_hang_than_thiet.form</field>
+            <field name="model">chuong_trinh_khach_hang_than_thiet</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="khach_hang_id"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Điểm thưởng">
+                                <field name="tong_diem"/>
+                                <field name="diem_da_su_dung"/>
+                                <field name="diem_kha_dung"/>
+                            </group>
+                            <group string="Hạng thành viên">
+                                <field name="hang_thanh_vien" widget="badge"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Lịch sử điểm">
+                                <field name="lich_su_diem_ids">
+                                    <tree>
+                                        <field name="ngay_tao"/>
+                                        <field name="loai" widget="badge"/>
+                                        <field name="diem"/>
+                                        <field name="nguon_goc"/>
+                                        <field name="mo_ta"/>
+                                        <field name="don_hang_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Ưu đãi đã nhận">
+                                <field name="uu_dai_ids">
+                                    <tree>
+                                        <field name="ngay_doi"/>
+                                        <field name="ten_uu_dai"/>
+                                        <field name="diem_doi"/>
+                                        <field name="ma_voucher"/>
+                                        <field name="ngay_het_han"/>
+                                        <field name="trang_thai" widget="badge"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="view_chuong_trinh_khach_hang_than_thiet_tree" model="ir.ui.view">
+            <field name="name">chuong_trinh_khach_hang_than_thiet.tree</field>
+            <field name="model">chuong_trinh_khach_hang_than_thiet</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="khach_hang_id"/>
+                    <field name="hang_thanh_vien" widget="badge"/>
+                    <field name="tong_diem"/>
+                    <field name="diem_kha_dung"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_chuong_trinh_khach_hang_than_thiet_search" model="ir.ui.view">
+            <field name="name">chuong_trinh_khach_hang_than_thiet.search</field>
+            <field name="model">chuong_trinh_khach_hang_than_thiet</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="khach_hang_id"/>
+                    <filter string="Kim cương" name="kim_cuong" domain="[('hang_thanh_vien', '=', 'kim_cuong')]"/>
+                    <filter string="Vàng" name="vang" domain="[('hang_thanh_vien', '=', 'vang')]"/>
+                    <filter string="Bạc" name="bac" domain="[('hang_thanh_vien', '=', 'bac')]"/>
+                    <filter string="Đồng" name="dong" domain="[('hang_thanh_vien', '=', 'dong')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Hạng thành viên" name="group_hang" context="{'group_by': 'hang_thanh_vien'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_loyalty_program" model="ir.actions.act_window">
+            <field name="name">Chương trình thân thiết</field>
+            <field name="res_model">chuong_trinh_khach_hang_than_thiet</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_chuong_trinh_khach_hang_than_thiet_search"/>
+        </record>
+    </data>
+</odoo>
