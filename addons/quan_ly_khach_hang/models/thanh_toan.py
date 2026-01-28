@@ -90,6 +90,12 @@ class ThanhToan(models.Model):
         khach_hang = self.khach_hang_id or self.hoa_don_id.khach_hang_id
         email_to = khach_hang.email if khach_hang else False
         if not email_to:
+            self._log_email(
+                subject=f"Xác nhận thanh toán - Hóa đơn {self.hoa_don_id.so_hoa_don}",
+                email_to=email_to,
+                status='failed',
+                error_message='Khách hàng chưa có email',
+            )
             return False
 
         email_from = self.env.user.email_formatted or self.env.company.email or 'no-reply@example.com'
@@ -118,7 +124,11 @@ class ThanhToan(models.Model):
             'email_from': email_from,
             'auto_delete': True,
         })
-        mail.send()
+        try:
+            mail.send()
+            self._log_email(subject, email_to, status='sent', mail_id=mail.id)
+        except Exception as exc:
+            self._log_email(subject, email_to, status='failed', error_message=str(exc), mail_id=mail.id)
     
     def _update_hoa_don_status(self):
         """Cập nhật trạng thái hóa đơn dựa trên tình trạng thanh toán"""
@@ -149,3 +159,23 @@ class ThanhToan(models.Model):
         for record in self:
             if record.trang_thai == 'cho_xac_nhan':
                 record.trang_thai = 'huy'
+
+    def _log_email(self, subject, email_to, status='sent', error_message=None, mail_id=None):
+        model_exists = self.env['ir.model'].sudo().search([('model', '=', 'qlvb.email.log')], limit=1)
+        if not model_exists:
+            return
+        if mail_id and not self.env['mail.mail'].sudo().browse(mail_id).exists():
+            mail_id = False
+        self.env['qlvb.email.log'].sudo().create({
+            'name': f"{self.ma_thanh_toan or self.id} - {subject}" if subject else f"{self.ma_thanh_toan or self.id}",
+            'model_name': self._name,
+            'res_id': self.id,
+            'res_name': self.ma_thanh_toan,
+            'email_to': email_to or '',
+            'email_from': self.env.user.email_formatted or self.env.company.email or '',
+            'subject': subject or '',
+            'status': status,
+            'error_message': error_message,
+            'mail_id': mail_id or False,
+            'sent_date': fields.Datetime.now(),
+        })

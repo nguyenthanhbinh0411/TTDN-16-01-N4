@@ -30,13 +30,13 @@ class NhanVien(models.Model):
         "danh_sach_chung_chi_bang_cap", 
         inverse_name="nhan_vien_id", 
         string = "Danh sách chứng chỉ bằng cấp")
-    so_nguoi_bang_tuoi = fields.Integer("Số người bằng tuổi", 
-                                        compute="so_nguoi_bang_tuoi",
-                                        store=True
-                                        )
+    so_nguoi_bang_tuoi = fields.Integer(
+        "Số người bằng tuổi",
+        compute="_compute_so_nguoi_bang_tuoi",
+        store=True,
+    )
     luong_co_ban = fields.Float("Lương cơ bản")
     don_vi_hien_tai = fields.Many2one("don_vi", string="Đơn vị hiện tại", compute="_compute_don_vi_hien_tai", store=True)
-    chuc_vu_hien_tai = fields.Many2one("chuc_vu", string="Chức vụ hiện tại", compute="_compute_chuc_vu_hien_tai", store=True)
     chuc_vu_cap_do = fields.Integer(string='Cấp độ chức vụ', compute='_compute_chuc_vu_cap_do', store=True)
     chuc_vu_hien_tai = fields.Many2one("chuc_vu", string="Chức vụ hiện tại", compute="_compute_chuc_vu_hien_tai", store=True)
     
@@ -49,16 +49,18 @@ class NhanVien(models.Model):
             "view_mode": "tree,form",
             "domain": [("can_bo_xu_ly_id", "=", self.id)],
         }
+    @api.depends("tuoi")
     def _compute_so_nguoi_bang_tuoi(self):
         for record in self:
-            if record.tuoi:
-                records = self.env['nhan_vien'].search(
-                    [
-                        ('tuoi', '=', record.tuoi),
-                        ('ma_dinh_danh', '!=', record.ma_dinh_danh)
-                    ]
-                )
-                record.so_nguoi_bang_tuoi = len(records)
+            if not record.tuoi:
+                record.so_nguoi_bang_tuoi = 0
+                continue
+
+            record_id = record.id if isinstance(record.id, int) else 0
+            domain = [("tuoi", "=", record.tuoi)]
+            if record_id:
+                domain.append(("id", "!=", record_id))
+            record.so_nguoi_bang_tuoi = self.env["nhan_vien"].search_count(domain)
     _sql_constraints = [
         ('ma_dinh_danh_unique', 'unique(ma_dinh_danh)', 'Mã định danh phải là duy nhất')
     ]
@@ -118,12 +120,14 @@ class NhanVien(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         records = super(NhanVien, self).create(vals_list)
-        # Trigger sync sau khi tạo
-        self._sync_nhan_su_data()
+        # Trigger sync sau khi tạo (tạm tắt để tránh lỗi runtime)
         return records
 
     def write(self, vals):
         result = super(NhanVien, self).write(vals)
-        # Trigger sync sau khi update
-        self._sync_nhan_su_data()
+        # Trigger sync sau khi update (tạm tắt để tránh lỗi runtime)
         return result
+
+    def _sync_nhan_su_data(self):
+        """Hook đồng bộ dữ liệu nhân sự. Hiện tại để no-op để tránh lỗi thiếu method."""
+        return True

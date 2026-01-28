@@ -57,7 +57,7 @@
                         </div>
                         <group>
                             <group string="Thông tin cơ bản">
-                                <field name="ma_khach_hang"/>
+                                <field name="ma_khach_hang" readonly="1"/>
                                 <field name="loai_khach_hang"/>
                                 <field name="trang_thai"/>
                                 <field name="nhan_vien_phu_trach_id"/>

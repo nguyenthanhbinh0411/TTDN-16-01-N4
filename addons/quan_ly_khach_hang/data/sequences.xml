@@ -64,6 +64,15 @@
             <field name="number_increment">1</field>
         </record>
 
+        <!-- Sequence cho Khách hàng -->
+        <record id="seq_khach_hang" model="ir.sequence">
+            <field name="name">Khách hàng</field>
+            <field name="code">khach_hang</field>
+            <field name="prefix">KH</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+        </record>
+
             <!-- Sequence cho Báo giá -->
             <record id="seq_bao_gia" model="ir.sequence">
                 <field name="name">Báo giá</field>

@@ -137,7 +137,7 @@ class DonHang(models.Model):
             'name': 'Tạo phiếu giao hàng',
             'res_model': 'giao_hang',
             'view_mode': 'form',
-            'target': 'current',
+            'target': 'new',
             'context': {
                 'default_don_hang_id': self.id,
             }
@@ -148,6 +148,12 @@ class DonHang(models.Model):
         self.ensure_one()
         email_to = self.khach_hang_id.email if self.khach_hang_id else False
         if not email_to:
+            self._log_email(
+                subject=f"Thông báo giao hàng đơn {self.ma_don_hang}",
+                email_to=email_to,
+                status='failed',
+                error_message='Khách hàng chưa có email',
+            )
             raise UserError("Khách hàng chưa có email để gửi thông báo giao hàng.")
 
         email_from = self.env.user.email_formatted or self.env.company.email or 'no-reply@example.com'
@@ -166,7 +172,31 @@ class DonHang(models.Model):
             'email_from': email_from,
             'auto_delete': True,
         })
-        mail.send()
+        try:
+            mail.send()
+            self._log_email(subject, email_to, status='sent', mail_id=mail.id)
+        except Exception as exc:
+            self._log_email(subject, email_to, status='failed', error_message=str(exc), mail_id=mail.id)
+
+    def _log_email(self, subject, email_to, status='sent', error_message=None, mail_id=None):
+        model_exists = self.env['ir.model'].sudo().search([('model', '=', 'qlvb.email.log')], limit=1)
+        if not model_exists:
+            return
+        if mail_id and not self.env['mail.mail'].sudo().browse(mail_id).exists():
+            mail_id = False
+        self.env['qlvb.email.log'].sudo().create({
+            'name': f"{self.ma_don_hang or self.id} - {subject}" if subject else f"{self.ma_don_hang or self.id}",
+            'model_name': self._name,
+            'res_id': self.id,
+            'res_name': self.ten_don_hang,
+            'email_to': email_to or '',
+            'email_from': self.env.user.email_formatted or self.env.company.email or '',
+            'subject': subject or '',
+            'status': status,
+            'error_message': error_message,
+            'mail_id': mail_id or False,
+            'sent_date': fields.Datetime.now(),
+        })
     
     def action_view_hoa_don(self):
         """Xem danh sách hóa đơn"""

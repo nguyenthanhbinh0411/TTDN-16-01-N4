@@ -82,7 +82,7 @@
                     <header>
                         <button name="action_xac_nhan" string="Xác nhận" type="object" class="btn-primary" attrs="{'invisible': [('trang_thai', '!=', 'nhap')]}"/>
                         <button name="action_open_giao_hang_form" string="Tạo phiếu giao hàng" type="object" class="btn-primary"
-                            attrs="{'invisible': [('trang_thai', 'not in', ['xac_nhan', 'dang_thuc_hien'])]}"/>
+                            attrs="{'invisible': [('trang_thai', '!=', 'dang_thuc_hien')]}"/>
                         <button name="action_bat_dau_thuc_hien" string="Bắt đầu thực hiện" type="object" class="btn-primary" attrs="{'invisible': [('trang_thai', '!=', 'xac_nhan')]}"/>
                         <button name="action_hoan_thanh" string="Hoàn thành" type="object" class="btn-success"
                             attrs="{'invisible': [('trang_thai', '!=', 'dang_thuc_hien')], 'disabled': [('giao_hang_ids', '=', False)]}"/>

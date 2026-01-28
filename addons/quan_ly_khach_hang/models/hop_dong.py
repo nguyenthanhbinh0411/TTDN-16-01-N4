@@ -163,6 +163,46 @@ class HopDong(models.Model):
                 )
                 record.last_expired_notice_date = fields.Date.today()
 
+    def action_extract_and_summarize(self):
+        """Trích xuất và tóm tắt nội dung hợp đồng từ file đính kèm"""
+        self.ensure_one()
+
+        def _safe_message_post(body):
+            if hasattr(self, 'message_post') and callable(self.message_post):
+                try:
+                    self.message_post(body=body)
+                except Exception:
+                    pass
+
+        if not self.file_hop_dong or not self.file_hop_dong_name:
+            raise UserError("Không tìm thấy file hợp đồng hợp lệ (PDF, DOCX, DOC, TXT)")
+
+        file_name = (self.file_hop_dong_name or '').lower()
+        if not file_name.endswith(('.pdf', '.docx', '.doc', '.txt')):
+            raise UserError("Loại file không được hỗ trợ. Chỉ hỗ trợ PDF, DOCX, DOC, TXT")
+
+        try:
+            result = self.env['chatbot.service'].process_uploaded_file(
+                file_data=self.file_hop_dong,
+                file_name=self.file_hop_dong_name,
+                model_key='openai_gpt4o_mini',
+                question="Hãy trích xuất nội dung chính và tóm tắt hợp đồng này"
+            )
+
+            if result.get('success'):
+                summary = result.get('summary', result.get('answer', ''))
+                if summary:
+                    self.write({'mo_ta': summary[:2000]})
+                    _safe_message_post(body=f"Đã cập nhật mô tả từ AI:\n{summary}")
+                else:
+                    _safe_message_post(body="AI không thể tạo tóm tắt cho hợp đồng này")
+            else:
+                error_msg = result.get('error', 'Lỗi không xác định')
+                _safe_message_post(body=f"Lỗi khi xử lý file: {error_msg}")
+        except Exception as exc:
+            _safe_message_post(body=f"Lỗi hệ thống: {str(exc)}")
+            raise
+
     def _get_loai_vb(self, ma_loai, ten):
         loai_vb = self.env['loai_van_ban'].search([('ma_loai', '=', ma_loai)], limit=1)
         if not loai_vb:

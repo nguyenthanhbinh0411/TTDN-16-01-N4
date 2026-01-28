@@ -10,6 +10,10 @@
                     <header>
                         <button name="action_send_to_customer" string="Gửi khách" type="object" 
                             attrs="{'invisible': ['|', ('id', '=', False), ('trang_thai', '!=', 'nhap')]}" class="oe_highlight"/>
+                        <button name="action_extract_and_summarize" string="Trích xuất &amp; Tóm tắt" type="object"
+                            class="btn-primary" icon="fa-magic"
+                            attrs="{'invisible': [('file_bao_gia', '=', False)]}"
+                            help="Trích xuất nội dung và tóm tắt từ file báo giá"/>
                         <button name="action_customer_approve" string="Khách đồng ý" type="object" 
                             attrs="{'invisible': ['|', ('id', '=', False), ('trang_thai', '!=', 'gui_khach')]}" class="oe_highlight"/>
                         <button name="action_customer_reject" string="Khách từ chối" type="object" 
@@ -28,7 +32,7 @@
                                 <field name="khach_hang_id"/>
                                 <field name="co_hoi_id"/>
                                 <field name="nhan_vien_lap_id"/>
-                                <field name="hop_dong_id"/>
+                                <field name="hop_dong_id" invisible="1"/>
                             </group>
                             <group string="Thời hạn và giá trị">
                                 <field name="ngay_tao"/>

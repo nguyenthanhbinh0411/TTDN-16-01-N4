@@ -252,6 +252,32 @@ class VanBanDi(models.Model):
             self.kh_dien_thoai = self.khach_hang_id.dien_thoai
             self.kh_email = self.khach_hang_id.email
     
+    @api.onchange('nguoi_soan_thao_id')
+    def _onchange_nguoi_soan_thao(self):
+        """Tự động gán đơn vị soạn thảo từ người soạn thảo"""
+        if self.nguoi_soan_thao_id:
+            self.don_vi_soan_thao_id = self.nguoi_soan_thao_id.don_vi_hien_tai
+        else:
+            self.don_vi_soan_thao_id = False
+    
+    @api.onchange('approver_tp_id')
+    def _onchange_approver_tp(self):
+        """Chỉ cho phép chọn trưởng phòng hoặc giám đốc, và set người ký"""
+        if self.approver_tp_id:
+            self.approver_gd_id = False
+            self.nguoi_ky = self.approver_tp_id.ho_va_ten
+        elif not self.approver_gd_id:
+            self.nguoi_ky = False
+    
+    @api.onchange('approver_gd_id')
+    def _onchange_approver_gd(self):
+        """Chỉ cho phép chọn trưởng phòng hoặc giám đốc, và set người ký"""
+        if self.approver_gd_id:
+            self.approver_tp_id = False
+            self.nguoi_ky = self.approver_gd_id.ho_va_ten
+        elif not self.approver_tp_id:
+            self.nguoi_ky = False
+    
     def action_gui_duyet(self):
         """Gửi văn bản đi duyệt"""
         self.write({'trang_thai': 'cho_duyet'})
