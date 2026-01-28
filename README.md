@@ -36,11 +36,27 @@ Platform ERP được áp dụng vào học phần Thực tập doanh nghiệp d
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 </div>
 
-## 🚀 3. Các project đã thực hiện dựa trên Platform
+## 🚀 3. Giới thiệu hệ thống ERP
 
-Một số project sinh viên đã thực hiện:
-- #### [Khoá 15](./docs/projects/K15/README.md)
-- #### [Khoá 16]() (Coming soon)
+**Platform ERP** là hệ thống quản trị doanh nghiệp được xây dựng trên nền tảng **Odoo (mã nguồn mở)**, phục vụ học phần *Thực tập doanh nghiệp* của Khoa Công nghệ Thông tin – Trường Đại học Đại Nam. Hệ thống được thiết kế theo mô hình ERP tích hợp, tập trung vào ba phân hệ nghiệp vụ chính: **Nhân sự – Khách hàng – Văn bản**, hướng tới mục tiêu số hóa quy trình và quản lý dữ liệu tập trung.
+
+### Các chức năng chính của hệ thống
+
+* **Quản lý nhân sự (HRM)**
+  Quản lý hồ sơ nhân viên, cơ cấu tổ chức, chức vụ, lịch sử công tác và chứng chỉ/bằng cấp; cung cấp dữ liệu nhân sự làm **master data** để gán người phụ trách, người xử lý và người phê duyệt trong toàn hệ thống.
+
+* **Quản lý khách hàng và bán hàng (Customer/CRM)**
+  Quản lý khách hàng cá nhân/doanh nghiệp; theo dõi vòng đời bán hàng từ cơ hội → báo giá → hợp đồng → đơn hàng → giao hàng → hóa đơn → thanh toán; quản lý công nợ, lịch sử tương tác, khiếu nại và chương trình khách hàng thân thiết.
+
+* **Quản lý văn bản và tài liệu (Document Management)**
+  Quản lý văn bản đến/đi, hợp đồng và tài liệu số hóa; hỗ trợ OCR trích xuất nội dung; workflow phê duyệt đa cấp; chữ ký điện tử; quản lý phiên bản tài liệu và dashboard theo dõi trạng thái xử lý.
+
+* **Tích hợp liên module theo luồng nghiệp vụ End-to-End**
+  Hệ thống tích hợp chặt chẽ giữa HRM – Customer – Document, cho phép tự động tạo và phê duyệt văn bản từ hợp đồng khách hàng, đảm bảo dữ liệu thống nhất và truy vết đầy đủ theo người chịu trách nhiệm.
+
+* **Tự động hóa và hỗ trợ thông minh**
+  Hỗ trợ trigger tự động (cron job, automated action), gửi email thông báo; định hướng tích hợp AI như OCR, chatbot trợ lý và tóm tắt văn bản nhằm giảm thao tác thủ công và tăng hiệu quả xử lý.
+
 ## ⚙️ 4. Cài đặt
 
 ### 4.1. Cài đặt công cụ, môi trường và các thư viện cần thiết
@@ -93,7 +109,25 @@ python3 odoo-bin.py -c odoo.conf -u all
 ```
 Người sử dụng truy cập theo đường dẫn _http://localhost:8069/_ để đăng nhập vào hệ thống.
 
-## 📝 5. License
+## 4. Nguồn tham khảo và kế thừa mã nguồn
+
+Hệ thống được xây dựng dựa trên việc **kế thừa có chọn lọc và mở rộng** từ các mã nguồn và tài nguyên sau:
+
+* **Repository quản lý khách hàng và CRM (tham khảo)**
+  GitHub: [https://github.com/yukiharadev/TTDN-15-05-N2](https://github.com/yukiharadev/TTDN-15-05-N2)
+  → Kế thừa nền tảng quản lý khách hàng/CRM và mở rộng thành vòng đời bán hàng đầy đủ theo mô hình ERP.
+
+* **Repository quản lý văn bản (tham khảo)**
+  GitHub: [https://github.com/ngocanhit201/TTDN-15-04-N2](https://github.com/ngocanhit201/TTDN-15-04-N2)
+  → Kế thừa nghiệp vụ quản lý văn bản cơ bản và nâng cấp workflow duyệt, chữ ký điện tử, quản lý phiên bản.
+
+* **Repository nền tảng học phần Thực tập doanh nghiệp – FIT DNU**
+  GitHub: [https://github.com/FIT-DNU/Business-Internship](https://github.com/FIT-DNU/Business-Internship)
+  → Là nền tảng triển khai chung cho các đề tài ERP, định hướng chuẩn hóa cấu trúc hệ thống và yêu cầu học phần.
+
+
+
+## 📝 6. License
 
 © 2024 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.
 
