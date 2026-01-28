@@ -70,7 +70,7 @@
                                         </span>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <field name="nhan_vien_phu_trach_id" widget="many2one_avatar" options="{'display_avatar_name': False}"/>
+                                        <field name="nhan_vien_phu_trach_id" widget="many2one_avatar" options="{'display_avatar_name': False, 'avatar_field': 'anh'}"/>
                                     </div>
                                 </div>
                             </div>
@@ -89,6 +89,8 @@
                     <header>
                         <button name="action_chuyen_giai_doan_tiep" string="Chuyển giai đoạn tiếp" type="object" class="btn-primary"
                             attrs="{'invisible': ['|', ('id', '=', False), ('giai_doan', 'in', ['dam_phan', 'thang', 'thua'])]}"/>
+                        <button name="action_open_bao_gia_form" string="Báo giá" type="object" class="btn-primary"
+                            attrs="{'invisible': ['|', ('id', '=', False), ('giai_doan', '!=', 'bao_gia')]}"/>
                         <button name="action_open_hop_dong_form" string="Tạo hợp đồng" type="object" class="btn-primary"
                             attrs="{'invisible': ['|', ('id', '=', False), ('giai_doan', '!=', 'dam_phan')]}"/>
                         <button name="action_danh_dau_thang" string="Đánh dấu thắng" type="object" class="btn-success"
@@ -137,7 +139,7 @@
                             <group>
                                 <field name="ten_co_hoi"/>
                                 <field name="khach_hang_id"/>
-                                <field name="nhan_vien_phu_trach_id" widget="many2one_avatar"/>
+                                <field name="nhan_vien_phu_trach_id" widget="many2one_avatar" options="{'avatar_field': 'anh'}"/>
                                 <field name="nguon_co_hoi"/>
                                 <field name="trang_thai" widget="badge"/>
                             </group>
@@ -205,7 +207,7 @@
                     <field name="ma_co_hoi" decoration-bf="1"/>
                     <field name="ten_co_hoi"/>
                     <field name="khach_hang_id"/>
-                    <field name="nhan_vien_phu_trach_id" widget="many2one_avatar"/>
+                    <field name="nhan_vien_phu_trach_id" widget="many2one_avatar" options="{'avatar_field': 'anh'}"/>
                     <field name="gia_tri_du_kien" widget="monetary" sum="Tổng giá trị"/>
                     <field name="ty_le_thanh_cong" widget="progressbar"/>
                     <field name="giai_doan" widget="badge"/>

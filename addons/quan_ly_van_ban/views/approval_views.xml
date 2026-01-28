@@ -105,7 +105,7 @@
             <field name="arch" type="xml">
                 <form string="Phê duyệt văn bản đi">
                     <header>
-                        <button name="action_ky_van_ban" string="Ký" type="object"
+                        <button name="action_open_signature_wizard" string="Ký" type="object"
                             class="btn-secondary" attrs="{'invisible': [('trang_thai', 'not in', ['du_thao', 'cho_duyet'])]}"/>
                         <button name="action_phe_duyet_van_ban_di" string="Phê duyệt và gửi đi" type="object" 
                             class="oe_highlight" attrs="{'invisible': [('trang_thai', 'not in', ['du_thao', 'cho_duyet'])]}"/>
@@ -143,12 +143,12 @@
                         </group>
                         <group string="Phê duyệt">
                             <group>
-                                <field name="approver_tp_id"/>
+                                <field name="approver_tp_id" attrs="{'invisible': [('approver_tp_id', '=', False)]}"/>
                                 <field name="tp_da_duyet" readonly="1"/>
                                 <field name="tp_ngay_duyet" readonly="1"/>
                             </group>
                             <group>
-                                <field name="approver_gd_id"/>
+                                <field name="approver_gd_id" attrs="{'invisible': [('approver_gd_id', '=', False)]}"/>
                                 <field name="gd_da_duyet" readonly="1"/>
                                 <field name="gd_ngay_duyet" readonly="1"/>
                             </group>
@@ -197,7 +197,7 @@
                                 class="btn-primary" icon="fa-magic"
                                 attrs="{'invisible': [('file_dinh_kem', '=', False)]}"
                                 help="Sử dụng AI để trích xuất và tóm tắt nội dung từ file đính kèm"/>
-                        <button name="action_ky_van_ban" string="Ký" type="object"
+                        <button name="action_open_signature_wizard" string="Ký" type="object"
                             class="btn-secondary" attrs="{'invisible': [('trang_thai', 'not in', ['du_thao', 'cho_duyet'])]}"/>
                         <button name="action_phe_duyet_van_ban_di" string="Phê duyệt và gửi đi" type="object"
                             class="oe_highlight" attrs="{'invisible': [('trang_thai', 'not in', ['du_thao', 'cho_duyet'])]}"/>
@@ -263,7 +263,7 @@
             <field name="arch" type="xml">
                 <header position="replace">
                     <header>
-                        <button name="action_ky_van_ban" string="Ký" type="object"
+                        <button name="action_open_signature_wizard" string="Ký" type="object"
                             class="btn-secondary" attrs="{'invisible': [('trang_thai', 'not in', ['du_thao', 'cho_duyet'])]}"/>
                         <button name="action_phe_duyet_van_ban_di" string="Phê duyệt và gửi đi" type="object" class="oe_highlight" attrs="{'invisible': [('trang_thai', 'not in', ['du_thao', 'cho_duyet'])]}"/>
                         <button name="action_tu_choi_van_ban_di" string="Từ chối" type="object" class="btn-danger" attrs="{'invisible': [('trang_thai', 'not in', ['du_thao', 'cho_duyet'])]}"/>

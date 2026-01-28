@@ -163,6 +163,12 @@ class GiaoHang(models.Model):
         khach_hang = self.khach_hang_id or self.don_hang_id.khach_hang_id
         email_to = khach_hang.email if khach_hang else False
         if not email_to:
+            self._log_email(
+                subject=f"Đơn hàng {self.don_hang_id.ma_don_hang} đang được vận chuyển",
+                email_to=email_to,
+                status='failed',
+                error_message='Khách hàng chưa có email',
+            )
             raise UserError("Khách hàng chưa có email để gửi thông báo vận chuyển.")
 
         email_from = self.env.user.email_formatted or self.env.company.email or 'no-reply@example.com'
@@ -193,7 +199,11 @@ class GiaoHang(models.Model):
             'email_from': email_from,
             'auto_delete': True,
         })
-        mail.send()
+        try:
+            mail.send()
+            self._log_email(subject, email_to, status='sent', mail_id=mail.id)
+        except Exception as exc:
+            self._log_email(subject, email_to, status='failed', error_message=str(exc), mail_id=mail.id)
 
     def _send_da_giao_email(self):
         """Gửi email khi xác nhận đã giao hàng (không dùng mail_templates)"""
@@ -201,6 +211,12 @@ class GiaoHang(models.Model):
         khach_hang = self.khach_hang_id or self.don_hang_id.khach_hang_id
         email_to = khach_hang.email if khach_hang else False
         if not email_to:
+            self._log_email(
+                subject=f"Xác nhận giao hàng thành công - Đơn {self.don_hang_id.ma_don_hang}",
+                email_to=email_to,
+                status='failed',
+                error_message='Khách hàng chưa có email',
+            )
             raise UserError("Khách hàng chưa có email để gửi thông báo đã giao hàng.")
 
         email_from = self.env.user.email_formatted or self.env.company.email or 'no-reply@example.com'
@@ -258,7 +274,11 @@ class GiaoHang(models.Model):
             mail_vals['attachment_ids'] = [(6, 0, attachment_ids)]
 
         mail = self.env['mail.mail'].create(mail_vals)
-        mail.send()
+        try:
+            mail.send()
+            self._log_email(subject, email_to, status='sent', mail_id=mail.id)
+        except Exception as exc:
+            self._log_email(subject, email_to, status='failed', error_message=str(exc), mail_id=mail.id)
     
     @api.model
     def create(self, vals):
@@ -275,3 +295,23 @@ class GiaoHang(models.Model):
             don_hang.write({'trang_thai': trang_thai_truoc})
 
         return record
+
+    def _log_email(self, subject, email_to, status='sent', error_message=None, mail_id=None):
+        model_exists = self.env['ir.model'].sudo().search([('model', '=', 'qlvb.email.log')], limit=1)
+        if not model_exists:
+            return
+        if mail_id and not self.env['mail.mail'].sudo().browse(mail_id).exists():
+            mail_id = False
+        self.env['qlvb.email.log'].sudo().create({
+            'name': f"{self.ma_giao_hang or self.id} - {subject}" if subject else f"{self.ma_giao_hang or self.id}",
+            'model_name': self._name,
+            'res_id': self.id,
+            'res_name': self.ma_giao_hang,
+            'email_to': email_to or '',
+            'email_from': self.env.user.email_formatted or self.env.company.email or '',
+            'subject': subject or '',
+            'status': status,
+            'error_message': error_message,
+            'mail_id': mail_id or False,
+            'sent_date': fields.Datetime.now(),
+        })

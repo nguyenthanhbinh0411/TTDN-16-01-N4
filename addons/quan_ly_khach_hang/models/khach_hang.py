@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -12,7 +12,7 @@ class KhachHang(models.Model):
     _order = 'ten_khach_hang asc'
 
     # Thông tin cơ bản
-    ma_khach_hang = fields.Char("Mã khách hàng", required=True, copy=False)
+    ma_khach_hang = fields.Char("Mã khách hàng", required=True, copy=False, default=lambda self: _('New'))
     ten_khach_hang = fields.Char("Tên khách hàng", required=True)
     loai_khach_hang = fields.Selection([
         ('ca_nhan', 'Cá nhân'),
@@ -114,6 +114,19 @@ class KhachHang(models.Model):
     
     ghi_chu = fields.Text("Ghi chú")
     anh = fields.Binary("Ảnh/Logo")
+
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if 'ma_khach_hang' in fields_list and (not res.get('ma_khach_hang') or res.get('ma_khach_hang') == _('New')):
+            res['ma_khach_hang'] = self.env['ir.sequence'].next_by_code('khach_hang') or _('New')
+        return res
+
+    @api.model
+    def create(self, vals):
+        if not vals.get('ma_khach_hang') or vals.get('ma_khach_hang') == _('New'):
+            vals['ma_khach_hang'] = self.env['ir.sequence'].next_by_code('khach_hang') or _('New')
+        return super().create(vals)
     
     @api.depends('hop_dong_ids', 'bao_gia_ids', 'tai_lieu_ids', 'co_hoi_ids', 'don_hang_ids', 'hoa_don_ids', 'lich_su_tuong_tac_ids', 'khieu_nai_ids')
     def _compute_counts(self):

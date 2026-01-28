@@ -140,6 +140,12 @@ class CoHoiBanHang(models.Model):
         if self.giai_doan == 'bao_gia' and not hasattr(self, '_stage_change_processed'):
             self._create_van_ban_den_on_stage_change()
     
+    @api.onchange('khach_hang_id')
+    def _onchange_khach_hang_id(self):
+        """Tự động gán nhân viên phụ trách từ khách hàng"""
+        if self.khach_hang_id and self.khach_hang_id.nhan_vien_phu_trach_id:
+            self.nhan_vien_phu_trach_id = self.khach_hang_id.nhan_vien_phu_trach_id
+    
     def _create_van_ban_den_on_stage_change(self):
         """Tạo văn bản đến khi chuyển sang giai đoạn báo giá"""
         self.ensure_one()
@@ -256,6 +262,26 @@ class CoHoiBanHang(models.Model):
             'view_mode': 'tree,form',
             'domain': [('co_hoi_id', '=', self.id)],
             'context': {'default_co_hoi_id': self.id, 'default_khach_hang_id': self.khach_hang_id.id}
+        }
+
+    def action_open_bao_gia_form(self):
+        """Mở popup tạo báo giá từ cơ hội bán hàng"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Tạo báo giá',
+            'res_model': 'bao_gia',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_co_hoi_id': self.id,
+                'default_khach_hang_id': self.khach_hang_id.id,
+                'default_nhan_vien_lap_id': self.nhan_vien_phu_trach_id.id,
+                'default_ten_bao_gia': self.ten_co_hoi,
+                'default_tong_gia_tri': self.gia_tri_du_kien,
+                'default_don_vi_tien': self.don_vi_tien,
+                'open_in_popup': True,
+            }
         }
 
     def action_view_hop_dong(self):

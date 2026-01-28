@@ -70,6 +70,17 @@ class BaoGia(models.Model):
                 record._send_bao_gia_email()
                 record.trang_thai = 'gui_khach'
                 record._create_van_ban_den()
+        if self.env.context.get('open_in_popup'):
+            self.ensure_one()
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Báo giá',
+                'res_model': 'bao_gia',
+                'view_mode': 'form',
+                'res_id': self.id,
+                'target': 'new',
+                'context': dict(self.env.context),
+            }
     
     def action_customer_approve(self):
         """Khách hàng đồng ý báo giá"""
@@ -88,6 +99,46 @@ class BaoGia(models.Model):
         for record in self:
             if record.trang_thai in ['nhap', 'gui_khach']:
                 record.trang_thai = 'het_han'
+
+    def action_extract_and_summarize(self):
+        """Trích xuất và tóm tắt nội dung báo giá từ file đính kèm"""
+        self.ensure_one()
+
+        def _safe_message_post(body):
+            if hasattr(self, 'message_post') and callable(self.message_post):
+                try:
+                    self.message_post(body=body)
+                except Exception:
+                    pass
+
+        if not self.file_bao_gia or not self.file_bao_gia_name:
+            raise UserError("Không tìm thấy file báo giá hợp lệ (PDF, DOCX, DOC, TXT)")
+
+        file_name = (self.file_bao_gia_name or '').lower()
+        if not file_name.endswith(('.pdf', '.docx', '.doc', '.txt')):
+            raise UserError("Loại file không được hỗ trợ. Chỉ hỗ trợ PDF, DOCX, DOC, TXT")
+
+        try:
+            result = self.env['chatbot.service'].process_uploaded_file(
+                file_data=self.file_bao_gia,
+                file_name=self.file_bao_gia_name,
+                model_key='openai_gpt4o_mini',
+                question="Hãy trích xuất nội dung chính và tóm tắt báo giá này"
+            )
+
+            if result.get('success'):
+                summary = result.get('summary', result.get('answer', ''))
+                if summary:
+                    self.write({'ghi_chu': summary[:2000]})
+                    _safe_message_post(body=f"Đã cập nhật ghi chú từ AI:\n{summary}")
+                else:
+                    _safe_message_post(body="AI không thể tạo tóm tắt cho báo giá này")
+            else:
+                error_msg = result.get('error', 'Lỗi không xác định')
+                _safe_message_post(body=f"Lỗi khi xử lý file: {error_msg}")
+        except Exception as exc:
+            _safe_message_post(body=f"Lỗi hệ thống: {str(exc)}")
+            raise
 
     def _get_loai_vb(self, ma_loai, ten):
         loai_vb = self.env['loai_van_ban'].search([('ma_loai', '=', ma_loai)], limit=1)

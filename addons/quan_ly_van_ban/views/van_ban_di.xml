@@ -57,7 +57,7 @@
                                 <button name="action_ap_dung_mau" string="Áp dụng mẫu" type="object" class="btn-secondary" attrs="{'invisible': [('mau_van_ban_id', '=', False)]}"/>
                             </group>
                         </group>
-                        <group string="Thông tin khác">
+                        <group string="Thông tin khác" invisible="1">
                             <group>
                                 <field name="nguoi_tao_id" readonly="1"/>
                                 <field name="ngay_tao" readonly="1"/>

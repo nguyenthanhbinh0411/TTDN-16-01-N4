@@ -10,6 +10,10 @@
                     <header>
                         <button name="action_submit_for_approval" string="Gửi duyệt" type="object" 
                             attrs="{'invisible': ['|', ('id', '=', False), ('trang_thai', '!=', 'nhap')]}" class="oe_highlight"/>
+                        <button name="action_extract_and_summarize" string="Trích xuất &amp; Tóm tắt" type="object"
+                            class="btn-primary" icon="fa-magic"
+                            attrs="{'invisible': [('file_hop_dong', '=', False)]}"
+                            help="Trích xuất nội dung và tóm tắt từ file hợp đồng"/>
                         <button name="action_sign" string="Ký" type="object"
                             attrs="{'invisible': ['|', ('id', '=', False), '|', ('trang_thai', '!=', 'cho_duyet'), ('chu_ky_hinh_anh', '!=', False)]}"/>
                         <button name="action_approve" string="Duyệt" type="object" 

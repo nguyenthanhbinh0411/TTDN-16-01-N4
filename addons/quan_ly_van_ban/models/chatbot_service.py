@@ -222,7 +222,7 @@ class ChatbotService(models.AbstractModel):
                 'so_ky_hieu': doc.so_ky_hieu,
                 'trich_yeu': doc.trich_yeu[:100] if doc.trich_yeu else '',
                 'han_xu_ly': str(doc.han_xu_ly) if doc.han_xu_ly else '',
-                'nguoi_xu_ly': doc.nguoi_xu_ly_id.ho_ten if doc.nguoi_xu_ly_id else 'Chưa phân công',
+                'nguoi_xu_ly': (getattr(doc.nguoi_xu_ly_id, 'ho_va_ten', '') or getattr(doc.nguoi_xu_ly_id, 'ho_ten', '')) if doc.nguoi_xu_ly_id else 'Chưa phân công',
                 'khach_hang': doc.khach_hang_id.ten_khach_hang if doc.khach_hang_id else '',
                 'so_ngay_qua_han': (today - doc.han_xu_ly).days if doc.han_xu_ly else 0,
             })
@@ -384,7 +384,7 @@ class ChatbotService(models.AbstractModel):
                 'trich_yeu': (r.trich_yeu or '')[:160],
                 'ngay_van_ban': str(r.ngay_van_ban) if r.ngay_van_ban else '',
                 'khach_hang': r.khach_hang_id.ten_khach_hang if r.khach_hang_id else '',
-                'nguoi_xu_ly': getattr(r.nguoi_xu_ly_id, 'ho_ten', '') if getattr(r, 'nguoi_xu_ly_id', False) else '',
+                'nguoi_xu_ly': (getattr(r.nguoi_xu_ly_id, 'ho_va_ten', '') or getattr(r.nguoi_xu_ly_id, 'ho_ten', '')) if getattr(r, 'nguoi_xu_ly_id', False) else '',
                 'so_luong_taptin': len(r.attachment_ids) if hasattr(r, 'attachment_ids') else 0,
                 'reference': str(getattr(r, 'reference', '') or ''),
                 'trang_thai': dict(r._fields['trang_thai'].selection).get(r.trang_thai, r.trang_thai) if 'trang_thai' in r._fields else '',
@@ -662,7 +662,7 @@ class ChatbotService(models.AbstractModel):
                 'khach_hang': r.khach_hang_id.ten_khach_hang if hasattr(r, 'khach_hang_id') and r.khach_hang_id else '',
                 'loai': getattr(r, 'loai_tuong_tac', ''),
                 'ngay': str(getattr(r, 'ngay_tuong_tac', '')),
-                'nguoi_phu_trach': r.nhan_vien_id.ho_ten if hasattr(r, 'nhan_vien_id') and r.nhan_vien_id else '',
+                'nguoi_phu_trach': (getattr(r.nhan_vien_id, 'ho_va_ten', '') or getattr(r.nhan_vien_id, 'ho_ten', '')) if hasattr(r, 'nhan_vien_id') and r.nhan_vien_id else '',
             } for r in records]
         except Exception as e:
             _logger.warning("Không thể truy vấn lịch sử tương tác: %s", str(e))
