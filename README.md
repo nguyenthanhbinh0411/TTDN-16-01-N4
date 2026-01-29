@@ -4,7 +4,7 @@
     </a>
 </h2>
 <h2 align="center">
-    PLATFORM ERP
+    ERP: HỆ THỐNG QUẢN LÝ KHÁCH HÀNG & VĂN BẢN
 </h2>
 <div align="center">
     <p align="center">
