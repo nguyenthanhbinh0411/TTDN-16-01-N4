@@ -4,7 +4,7 @@
     </a>
 </h2>
 <h2 align="center">
-    PLATFORM ERP
+    ERP: HỆ THỐNG QUẢN LÝ KHÁCH HÀNG & VĂN BẢN
 </h2>
 <div align="center">
     <p align="center">
@@ -20,7 +20,7 @@
 </div>
 
 ## 📖 1. Giới thiệu
-**Platform ERP** là hệ thống quản trị doanh nghiệp được xây dựng trên nền tảng **Odoo (mã nguồn mở)**, phục vụ học phần *Thực tập doanh nghiệp* của Khoa Công nghệ Thông tin – Trường Đại học Đại Nam. Hệ thống được thiết kế theo mô hình ERP tích hợp, tập trung vào ba phân hệ nghiệp vụ chính: **Nhân sự – Khách hàng – Văn bản**, hướng tới mục tiêu số hóa quy trình và quản lý dữ liệu tập trung.
+**ERP: HỆ THỐNG QUẢN LÝ KHÁCH HÀNG & VĂN BẢN** là hệ thống quản trị doanh nghiệp được xây dựng trên nền tảng **Odoo (mã nguồn mở)**, phục vụ học phần *Thực tập doanh nghiệp* của Khoa Công nghệ Thông tin – Trường Đại học Đại Nam. Hệ thống được thiết kế theo mô hình ERP tích hợp, tập trung vào ba phân hệ nghiệp vụ chính: **Nhân sự – Khách hàng – Văn bản**, hướng tới mục tiêu số hóa quy trình và quản lý dữ liệu tập trung.
 
 ### Các chức năng chính của hệ thống
 
