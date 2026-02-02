@@ -312,6 +312,15 @@ Hệ thống được xây dựng dựa trên việc **kế thừa có chọn l�
   />
 </p>
 
+## 🔥 Demo
+
+Dưới đây là video demo giới thiệu chức năng chính của dự án:
+
+🎥 **Xem video demo:**  
+🔗 https://drive.google.com/file/d/1XpkW_k6fBDpILEwmaxLWcl24tdXTLVJb/view?usp=sharing
+
+*Video thể hiện toàn bộ workflow & tính năng chính.*
+
 
 ## 📝 6. License
 
