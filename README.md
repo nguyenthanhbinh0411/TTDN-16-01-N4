@@ -303,11 +303,11 @@ Hệ thống được xây dựng dựa trên việc **kế thừa có chọn l�
   GitHub: [https://github.com/FIT-DNU/Business-Internship](https://github.com/FIT-DNU/Business-Internship)
   → Là nền tảng triển khai chung cho các đề tài ERP, định hướng chuẩn hóa cấu trúc hệ thống và yêu cầu học phần.
 
+<img width="709" height="1024" alt="1770068271208-89d4bbf0-3bf1-44b4-8ee6-1627af8daf9e_1" src="https://github.com/user-attachments/assets/e1477dff-d1db-4011-9553-f9cccee1dec6" />
 
 
 ## 📝 6. License
 
-<img width="709" height="1024" alt="1770068271208-89d4bbf0-3bf1-44b4-8ee6-1627af8daf9e_1" src="https://github.com/user-attachments/assets/e1477dff-d1db-4011-9553-f9cccee1dec6" />
 
 © 2024 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.
 
