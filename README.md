@@ -122,6 +122,117 @@ Luồng **Số hóa hồ sơ khách hàng** được lựa chọn làm luồng n
 Luồng bắt đầu từ tạo hồ sơ khách hàng và hợp đồng, chuyển sang xử lý văn bản pháp lý, phê duyệt – ký điện tử và kết thúc bằng việc lưu trữ, liên kết hồ sơ số hóa. Trong toàn bộ quy trình, **HRM đóng vai trò dữ liệu gốc** để gán người phụ trách, người duyệt và người ký; hệ thống hỗ trợ **tự động hóa workflow** và **tích hợp AI/API** (OCR, chữ ký số, thông báo).
 
 
+---
+
+## 🎨 Giao diện hệ thống
+
+*(Một số giao diện tiêu biểu của hệ thống)*
+
+Hệ thống được thiết kế với giao diện trực quan, thống nhất và thân thiện với người dùng, hỗ trợ đầy đủ các nghiệp vụ quản lý nhân sự, khách hàng và văn bản.
+
+---
+
+### 📊 1. Dashboard tổng quan
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/4feafa52-32d1-481d-a300-e7ed13a1ec32" width="900"/>
+</p>
+
+**Hình 3.1 – Giao diện Dashboard**
+Hiển thị tổng quan các chỉ số quan trọng của hệ thống như số lượng nhân viên, hợp đồng, đơn hàng và tình trạng hoạt động chung.
+
+---
+
+### 👥 2. Quản lý nhân sự
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/64ebdfdd-92e6-4d34-a508-9ac472356676" width="900"/>
+</p>
+
+**Hình 3.2 – Giao diện quản lý nhân viên**
+Cho phép quản lý thông tin nhân viên, phân quyền, theo dõi trạng thái làm việc và các nghiệp vụ liên quan.
+
+---
+
+### 🧑‍💼 3. Dashboard khách hàng
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e2962e2b-012a-41d3-b724-2def46e292cd" width="900"/>
+</p>
+
+**Hình 3.3 – Dashboard khách hàng**
+Tổng hợp dữ liệu khách hàng, lịch sử giao dịch và các chỉ số hỗ trợ theo dõi mối quan hệ khách hàng (CRM).
+
+---
+
+### 📄 4. Quản lý hợp đồng
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/aa526e11-ecc2-4599-b771-9007bc8dea54" width="900"/>
+</p>
+
+**Hình 3.4 – Giao diện danh sách hợp đồng**
+Quản lý danh sách hợp đồng, trạng thái hiệu lực, thời hạn và thông tin chi tiết của từng hợp đồng.
+
+---
+
+### 💼 5. Quản lý cơ hội bán hàng
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/20a2c4b6-7aa8-4c42-9c0f-651e937642f4" width="900"/>
+</p>
+
+**Hình 3.5 – Giao diện danh sách cơ hội bán hàng**
+Theo dõi pipeline bán hàng, trạng thái từng cơ hội và hỗ trợ tối ưu hoạt động kinh doanh.
+
+---
+
+### 🛒 6. Quản lý đơn hàng
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/8dae9b54-17cc-4abd-a6b4-5bdce1b1bd32" width="900"/>
+</p>
+
+**Hình 3.6 – Giao diện danh sách đơn hàng**
+Quản lý thông tin đơn hàng, trạng thái xử lý, khách hàng và giá trị đơn hàng.
+
+---
+
+### 🗂️ 7. Quản lý văn bản
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ed3a6559-a815-4430-9d3b-a9fd0a642560" width="900"/>
+</p>
+
+**Hình 3.7 – Dashboard quản lý văn bản**
+Tổng quan hệ thống văn bản đến – đi, hỗ trợ tìm kiếm và theo dõi trạng thái xử lý.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d9d74dcc-3ed1-42a8-bbf8-02a5318446f7" width="900"/>
+</p>
+
+**Hình 3.8 – Danh sách văn bản đến**
+Quản lý văn bản đến, phân loại, xử lý và theo dõi tiến độ.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/4c12ae94-9fef-402e-8fad-df5076a25b10" width="900"/>
+</p>
+
+**Hình 3.9 – Danh sách văn bản đi**
+Quản lý văn bản đi, lưu trữ lịch sử và trạng thái gửi.
+
+---
+
+### 🤖 8. Chatbot hỗ trợ
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/a39f4bed-adae-49b3-8f70-e74efb92d64b" width="900"/>
+</p>
+
+**Hình 3.10 – Chatbot hỗ trợ người dùng**
+Chatbot tích hợp giúp hỗ trợ tra cứu thông tin, giải đáp nhanh các câu hỏi và hướng dẫn sử dụng hệ thống.
+
+
 
 ---
 ## ⚙️ 4. Cài đặt
