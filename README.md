@@ -303,6 +303,10 @@ Hệ thống được xây dựng dựa trên việc **kế thừa có chọn l�
   GitHub: [https://github.com/FIT-DNU/Business-Internship](https://github.com/FIT-DNU/Business-Internship)
   → Là nền tảng triển khai chung cho các đề tài ERP, định hướng chuẩn hóa cấu trúc hệ thống và yêu cầu học phần.
 
+## 🖼️ Poster
+Poster giới thiệu tổng quan dự án.
+
+
 <p align="center">
   <img
     width="709"
